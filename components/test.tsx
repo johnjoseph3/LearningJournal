@@ -7,7 +7,7 @@ import CustomLink from "./custom-link"
 export default function TestExample() {
     const [apiResponse, setApiResponse] = useState("")
 
-    const makeRequestWithToken = async () => {
+    const makeRequest = async () => {
         try {
             const response = await fetch("/api/protected")
             const data = await response.json()
@@ -38,28 +38,15 @@ export default function TestExample() {
             </p>
 
             <div className="flex flex-col gap-4 rounded-md bg-gray-100 p-4">
-                <h2 className="text-xl font-bold">Third-party backend integration</h2>
-                <p>
-                    Press the button to send a request to our{" "}
-                    <CustomLink href="https://github.com/nextauthjs/authjs-third-party-backend">
-                        <code>example backend</code>
-                    </CustomLink>
-                    . Read more{" "}
-                    <CustomLink href="https://authjs.dev/guides/integrating-third-party-backends">
-                        <code>here</code>
-                    </CustomLink>
-                </p>
+                <h2 className="text-xl font-bold">Make request to backend</h2>
                 <div className="flex flex-col">
                     <Button
-                        onClick={makeRequestWithToken}
+                        onClick={makeRequest}
                     >
                         Make API Request
                     </Button>
                 </div>
                 <pre>{apiResponse}</pre>
-                <p className="italic">
-                    Note: This example only works when using the Keycloak provider.
-                </p>
             </div>
         </div>
     )

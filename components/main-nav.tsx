@@ -49,10 +49,10 @@ export function MainNav() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/"
+              href="/mixed-example"
               className={navigationMenuTriggerStyle()}
             >
-              Single Item
+              Mixed example
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
