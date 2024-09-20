@@ -34,28 +34,25 @@ export function MainNav() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="px-2">
-              Server Side
+              Example List
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/server-example" title="RSC Example">
-                  Protecting React Server Component.
+                <ListItem href="/" title="Route 1">
+                  Route 1
                 </ListItem>
-                <ListItem href="/middleware-example" title="Middleware Example">
-                  Using Middleware to protect pages & APIs.
-                </ListItem>
-                <ListItem href="/api-example" title="Route Handler Example">
-                  Getting the session inside an API Route.
+                <ListItem href="/" title="Route 2">
+                  Route 2
                 </ListItem>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/client-example"
+              href="/"
               className={navigationMenuTriggerStyle()}
             >
-              Client Side
+              Single Item
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
