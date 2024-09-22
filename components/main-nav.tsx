@@ -34,14 +34,14 @@ export function MainNav() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="px-2">
-              Example List
+              Page
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/" title="Route 1">
-                  Route 1
+                <ListItem href="/page/create" title="Page">
+                  create
                 </ListItem>
-                <ListItem href="/" title="Route 2">
+                <ListItem href="/lost" title="Route 2">
                   Route 2
                 </ListItem>
               </ul>
