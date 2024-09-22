@@ -1,11 +1,7 @@
 import CustomLink from "@/components/custom-link"
-import SessionData from "@/components/session-data"
-import { auth } from "auth"
 import TestExample from "@/components/test"
 
 export default async function Page() {
-  const session = await auth()
-
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">React Server Component Usage</h1>
@@ -20,7 +16,6 @@ export default async function Page() {
         </CustomLink>{" "}
         method.
       </p>
-      <SessionData session={session} />
       <TestExample />
     </div>
   )
