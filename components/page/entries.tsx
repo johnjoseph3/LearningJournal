@@ -16,7 +16,7 @@ export default function Entries(props: { entries: Entry[] }) {
         <div className="prose">
             {
                 entries.map((entry) => {
-                    return <ContentForm content={entry.content as JSONContent} onChange={onChange} />
+                    return <ContentForm key={entry.id} content={entry.content as JSONContent} onChange={onChange} />
                 })
             }
             {
