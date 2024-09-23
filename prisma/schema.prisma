@@ -2,11 +2,11 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -17,11 +17,13 @@ model User {
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  topic           Topic[]
+  topicCategories TopicCategory[]
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -34,33 +36,33 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
- 
+
 // Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
@@ -71,8 +73,52 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
+}
+
+model TopicCategory {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  topic     Topic[]
+}
+
+model Topic {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  category  TopicCategory    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  page      Page[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([name, userId])
+}
+
+model Page {
+  id        Int     @id @default(autoincrement())
+  title     String  @db.VarChar(255)
+  published Boolean @default(false)
+  order     Int
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId   Int
+  slug      String  @unique
+  entries   Entry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Entry {
+  id        Int     @id @default(autoincrement())
+  content   Json
+  page      Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId    Int
+  draft     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

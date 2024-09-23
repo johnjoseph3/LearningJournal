@@ -1,5 +1,7 @@
 import ContentForm from "@/components/content-form"
 
+// TODO - when displaying a saved Pge, use tailwind .prose class to style content
+
 export default async function Page() {
     return (
         <div className="space-y-2">
