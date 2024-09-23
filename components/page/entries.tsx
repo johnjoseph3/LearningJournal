@@ -1,7 +1,7 @@
 'use client'
 
 import { Entry } from "@prisma/client"
-import ContentForm from "../content-form";
+import EntryEditor from "../entry/entry-editor";
 import { JSONContent } from "novel";
 
 export default function Entries(props: { entries: Entry[] }) {
@@ -13,14 +13,11 @@ export default function Entries(props: { entries: Entry[] }) {
     }
 
     return (
-        <div className="prose">
+        <div>
             {
                 entries.map((entry) => {
-                    return <ContentForm key={entry.id} content={entry.content as JSONContent} onChange={onChange} />
+                    return <EntryEditor key={entry.id} entry={entry} editing={false} onChange={onChange} />
                 })
-            }
-            {
-                <ContentForm content={{}} onChange={onChange} />
             }
         </div>
     )
