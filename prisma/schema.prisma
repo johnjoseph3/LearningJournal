@@ -115,7 +115,7 @@ model Page {
 
 model Entry {
   id        Int     @id @default(autoincrement())
-  content   Json
+  content   String
   page      Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
   pageId    Int
   draft     Boolean  @default(false)
