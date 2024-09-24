@@ -11,7 +11,7 @@ import {
   EditorCommandList,
   EditorBubble,
 } from "novel";
-import { ImageResizer, handleCommandNavigation, Placeholder } from "novel/extensions";
+import { ImageResizer, handleCommandNavigation } from "novel/extensions";
 import { defaultExtensions } from "./extensions";
 import { NodeSelector } from "./selectors/node-selector";
 import { LinkSelector } from "./selectors/link-selector";
@@ -26,18 +26,6 @@ import { Separator } from "../ui/separator";
 const extensions = [
   ...defaultExtensions,
   slashCommand,
-  Placeholder.configure({
-    // Use a placeholder:
-    // placeholder: 'Write something …',
-    // Use different placeholders depending on the node type:
-    placeholder: () => {
-      // if (node.type.name === 'heading') {
-      return 'What’s the title?'
-    }
-
-    //   return 'Can you add some further context?'
-    // },
-  }),
 ];
 
 interface EditorProp {
