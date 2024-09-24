@@ -38,11 +38,8 @@ export function MainNav() {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/page/create" title="Page">
-                  create
-                </ListItem>
-                <ListItem href="/lost" title="Route 2">
-                  Route 2
+                <ListItem href="/pages/python" title="Python">
+                  programming
                 </ListItem>
               </ul>
             </NavigationMenuContent>

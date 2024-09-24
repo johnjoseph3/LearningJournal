@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import {
   EditorRoot,
@@ -10,7 +11,7 @@ import {
   EditorCommandList,
   EditorBubble,
 } from "novel";
-import { ImageResizer, handleCommandNavigation } from "novel/extensions";
+import { ImageResizer, handleCommandNavigation, Placeholder } from "novel/extensions";
 import { defaultExtensions } from "./extensions";
 import { NodeSelector } from "./selectors/node-selector";
 import { LinkSelector } from "./selectors/link-selector";
@@ -22,11 +23,26 @@ import { handleImageDrop, handleImagePaste } from "novel/plugins";
 import { uploadFn } from "./image-upload";
 import { Separator } from "../ui/separator";
 
-const extensions = [...defaultExtensions, slashCommand];
+const extensions = [
+  ...defaultExtensions,
+  slashCommand,
+  Placeholder.configure({
+    // Use a placeholder:
+    // placeholder: 'Write something …',
+    // Use different placeholders depending on the node type:
+    placeholder: () => {
+      // if (node.type.name === 'heading') {
+      return 'What’s the title?'
+    }
+
+    //   return 'Can you add some further context?'
+    // },
+  }),
+];
 
 interface EditorProp {
-  initialValue?: JSONContent;
-  onChange: (value: JSONContent) => void;
+  initialValue?: any;
+  onChange: (value: string) => void;
 }
 const Editor = ({ initialValue, onChange }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
@@ -36,7 +52,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
   return (
     <EditorRoot>
       <EditorContent
-        className="border p-4 rounded-xl"
+        className={"border p-4 rounded-xl"}
         {...(initialValue && { initialContent: initialValue })}
         extensions={extensions}
         editorProps={{
@@ -51,7 +67,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
           },
         }}
         onUpdate={({ editor }) => {
-          onChange(editor.getJSON());
+          onChange(editor.getHTML());
         }}
         slotAfter={<ImageResizer />}
       >

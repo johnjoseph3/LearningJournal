@@ -1,15 +1,21 @@
 'use client'
 
 import { Entry } from "@prisma/client"
+import ContentForm from "../content-form"
 import EntryEditor from "../entry/entry-editor";
-import { JSONContent } from "novel";
+
+const initialValue = ""
 
 export default function Entries(props: { entries: Entry[] }) {
     const { entries } = props;
 
-    const onChange = (val: JSONContent) => {
+    const onChange = (val: string) => {
         // TODO IMPLEMENT THIS
         console.log("val", val)
+    }
+
+    if (!entries.length) {
+        return <ContentForm content={initialValue} onChange={onChange} />
     }
 
     return (
