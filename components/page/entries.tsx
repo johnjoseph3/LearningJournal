@@ -27,8 +27,7 @@ export default function Entries(props: { entries: Entry[], pageId: number }) {
                 body: JSON.stringify(body),
             }
         )
-        const json = await res.json()
-        console.log("json", json)
+        const entry = await res.json()
     }
 
     if (!entries.length) {
