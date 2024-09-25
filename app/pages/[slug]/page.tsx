@@ -15,5 +15,5 @@ export default async function Page({ params }: { params: { slug: string } }) {
         return "could not find page"
     }
 
-    return <Entries entries={page.entries} />
+    return <Entries entries={page.entries} pageId={page.id} />
 }
