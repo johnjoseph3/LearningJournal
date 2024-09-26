@@ -11,7 +11,9 @@ import {
   Text,
   TextQuote,
 } from "lucide-react";
+// @ts-expect-error can't resolve types
 import { createSuggestionItems } from "novel/extensions";
+// @ts-expect-error can't resolve types
 import { Command, renderItems } from "novel/extensions";
 import { uploadFn } from "./image-upload";
 
@@ -20,7 +22,7 @@ export const suggestionItems = createSuggestionItems([
     title: "Send Feedback",
     description: "Let us know how we can improve.",
     icon: <MessageSquarePlus size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor.chain().focus().deleteRange(range).run();
       window.open("/feedback", "_blank");
     },
@@ -30,7 +32,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Just start typing with plain text.",
     searchTerms: ["p", "paragraph"],
     icon: <Text size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor
         .chain()
         .focus()
@@ -44,7 +46,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Track tasks with a to-do list.",
     searchTerms: ["todo", "task", "list", "check", "checkbox"],
     icon: <CheckSquare size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor.chain().focus().deleteRange(range).toggleTaskList().run();
     },
   },
@@ -53,7 +55,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Big section heading.",
     searchTerms: ["title", "big", "large"],
     icon: <Heading1 size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor
         .chain()
         .focus()
@@ -67,7 +69,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Medium section heading.",
     searchTerms: ["subtitle", "medium"],
     icon: <Heading2 size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor
         .chain()
         .focus()
@@ -81,7 +83,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Small section heading.",
     searchTerms: ["subtitle", "small"],
     icon: <Heading3 size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor
         .chain()
         .focus()
@@ -95,7 +97,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Create a simple bullet list.",
     searchTerms: ["unordered", "point"],
     icon: <List size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor.chain().focus().deleteRange(range).toggleBulletList().run();
     },
   },
@@ -104,7 +106,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Create a list with numbering.",
     searchTerms: ["ordered"],
     icon: <ListOrdered size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor.chain().focus().deleteRange(range).toggleOrderedList().run();
     },
   },
@@ -113,7 +115,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Capture a quote.",
     searchTerms: ["blockquote"],
     icon: <TextQuote size={18} />,
-    command: ({ editor, range }) =>
+    command: ({ editor, range }: {editor: any, range: any}) =>
       editor
         .chain()
         .focus()
@@ -127,7 +129,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Capture a code snippet.",
     searchTerms: ["codeblock"],
     icon: <Code size={18} />,
-    command: ({ editor, range }) =>
+    command: ({ editor, range }: {editor: any, range: any}) =>
       editor.chain().focus().deleteRange(range).toggleCodeBlock().run(),
   },
   {
@@ -135,7 +137,7 @@ export const suggestionItems = createSuggestionItems([
     description: "Upload an image from your computer.",
     searchTerms: ["photo", "picture", "media"],
     icon: <ImageIcon size={18} />,
-    command: ({ editor, range }) => {
+    command: ({ editor, range }: {editor: any, range: any}) => {
       editor.chain().focus().deleteRange(range).run();
       // upload image
       const input = document.createElement("input");

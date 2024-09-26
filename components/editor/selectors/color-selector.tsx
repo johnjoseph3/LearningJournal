@@ -138,11 +138,13 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
             <EditorBubbleItem
               key={index}
               onSelect={() => {
+                // @ts-expect-error can't resolve types
                 editor.commands.unsetColor();
                 name !== "Default" &&
                   editor
                     .chain()
                     .focus()
+                    // @ts-expect-error can't resolve types
                     .setColor(color || "")
                     .run();
                 onOpenChange(false);
@@ -169,7 +171,9 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
             <EditorBubbleItem
               key={index}
               onSelect={() => {
+                // @ts-expect-error can't resolve types
                 editor.commands.unsetHighlight();
+                // @ts-expect-error can't resolve types
                 name !== "Default" && editor.chain().focus().setHighlight({ color }).run();
                 onOpenChange(false);
               }}

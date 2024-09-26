@@ -18,30 +18,35 @@ export const TextButtons = () => {
     {
       name: "bold",
       isActive: (editor) => editor.isActive("bold"),
+      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleBold().run(),
       icon: BoldIcon,
     },
     {
       name: "italic",
       isActive: (editor) => editor.isActive("italic"),
+      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleItalic().run(),
       icon: ItalicIcon,
     },
     {
       name: "underline",
       isActive: (editor) => editor.isActive("underline"),
+      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleUnderline().run(),
       icon: UnderlineIcon,
     },
     {
       name: "strike",
       isActive: (editor) => editor.isActive("strike"),
+      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleStrike().run(),
       icon: StrikethroughIcon,
     },
     {
       name: "code",
       isActive: (editor) => editor.isActive("code"),
+      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleCode().run(),
       icon: CodeIcon,
     },

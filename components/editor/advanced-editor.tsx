@@ -11,6 +11,7 @@ import {
   EditorCommandList,
   EditorBubble,
 } from "novel";
+// @ts-expect-error can't resolve types
 import { ImageResizer, handleCommandNavigation } from "novel/extensions";
 import { defaultExtensions } from "./extensions";
 import { NodeSelector } from "./selectors/node-selector";
@@ -19,6 +20,7 @@ import { ColorSelector } from "./selectors/color-selector";
 
 import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
+// @ts-expect-error can't resolve types
 import { handleImageDrop, handleImagePaste } from "novel/plugins";
 import { uploadFn } from "./image-upload";
 import { Separator } from "../ui/separator";
@@ -65,7 +67,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
             No results
           </EditorCommandEmpty>
           <EditorCommandList>
-            {suggestionItems.map((item) => (
+            {suggestionItems.map((item: any) => (
               <EditorCommandItem
                 value={item.title}
                 onCommand={(val) => item.command?.(val)}

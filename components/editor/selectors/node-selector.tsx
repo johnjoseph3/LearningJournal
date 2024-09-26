@@ -39,6 +39,7 @@ const items: SelectorItem[] = [
     name: "Heading 1",
     icon: Heading1,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleHeading({ level: 1 }).run(),
     isActive: (editor) => editor.isActive("heading", { level: 1 }),
   },
@@ -46,6 +47,7 @@ const items: SelectorItem[] = [
     name: "Heading 2",
     icon: Heading2,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleHeading({ level: 2 }).run(),
     isActive: (editor) => editor.isActive("heading", { level: 2 }),
   },
@@ -53,6 +55,7 @@ const items: SelectorItem[] = [
     name: "Heading 3",
     icon: Heading3,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleHeading({ level: 3 }).run(),
     isActive: (editor) => editor.isActive("heading", { level: 3 }),
   },
@@ -60,6 +63,7 @@ const items: SelectorItem[] = [
     name: "To-do List",
     icon: CheckSquare,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleTaskList().run(),
     isActive: (editor) => editor.isActive("taskItem"),
   },
@@ -67,6 +71,7 @@ const items: SelectorItem[] = [
     name: "Bullet List",
     icon: ListOrdered,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleBulletList().run(),
     isActive: (editor) => editor.isActive("bulletList"),
   },
@@ -74,6 +79,7 @@ const items: SelectorItem[] = [
     name: "Numbered List",
     icon: ListOrdered,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleOrderedList().run(),
     isActive: (editor) => editor.isActive("orderedList"),
   },
@@ -81,6 +87,7 @@ const items: SelectorItem[] = [
     name: "Quote",
     icon: TextQuote,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleBlockquote().run(),
     isActive: (editor) => editor.isActive("blockquote"),
   },
@@ -88,6 +95,7 @@ const items: SelectorItem[] = [
     name: "Code",
     icon: Code,
     command: (editor) =>
+      // @ts-expect-error can't resolve types
       editor.chain().focus().clearNodes().toggleCodeBlock().run(),
     isActive: (editor) => editor.isActive("codeBlock"),
   },

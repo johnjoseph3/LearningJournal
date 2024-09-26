@@ -1,3 +1,4 @@
+// @ts-expect-error can't resolve types
 import { createImageUpload } from "novel/plugins";
 import { toast } from "sonner";
 
@@ -45,7 +46,7 @@ const onUpload = (file: File) => {
 
 export const uploadFn = createImageUpload({
   onUpload,
-  validateFn: (file) => {
+  validateFn: (file: any) => {
     if (!file.type.includes("image/")) {
       toast.error("File type not supported.");
       return false;
