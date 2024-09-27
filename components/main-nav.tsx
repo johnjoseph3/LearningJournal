@@ -2,8 +2,8 @@
 
 import Image from "next/image"
 
-import { cn } from "@/lib/utils"
-import CustomLink from "./custom-link"
+import { cn } from "@/lib/utils.ts"
+import CustomLink from "./custom-link.tsx"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,9 +12,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu"
+} from "./ui/navigation-menu.tsx"
 import React from "react"
-import { Button } from "./ui/button"
+import { Button } from "./ui/button.tsx"
 
 export function MainNav() {
   return (

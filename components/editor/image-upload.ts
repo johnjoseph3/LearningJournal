@@ -1,4 +1,3 @@
-// @ts-expect-error can't resolve types
 import { createImageUpload } from "novel/plugins";
 import { toast } from "sonner";
 

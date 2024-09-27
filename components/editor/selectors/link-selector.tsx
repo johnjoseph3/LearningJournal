@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils.ts";
 import { useEditor } from "novel";
 import { Check, Trash } from "lucide-react";
 import {
@@ -8,12 +8,12 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {
   PopoverContent,
   Popover,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover.tsx";
 
 export function isValidUrl(url: string) {
   try {
@@ -74,7 +74,6 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
             const input = target[0] as HTMLInputElement;
             const url = getUrlFromString(input.value);
             if (url) {
-              // @ts-expect-error can't resolve types
               editor.chain().focus().setLink({ href: url }).run();
               onOpenChange(false);
             }
@@ -95,7 +94,6 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
               type="button"
               className="flex h-8 items-center rounded-sm p-1 text-red-600 transition-all hover:bg-red-100 dark:hover:bg-red-800"
               onClick={() => {
-                // @ts-expect-error can't resolve types
                 editor.chain().focus().unsetLink().run();
                 onOpenChange(false);
               }}

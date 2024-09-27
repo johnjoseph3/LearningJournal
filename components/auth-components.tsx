@@ -1,5 +1,5 @@
-import { signIn, signOut } from "auth"
-import { Button } from "./ui/button"
+import { signIn, signOut } from "@/auth.ts"
+import { Button } from "./ui/button.tsx"
 
 export function SignIn({
   provider,

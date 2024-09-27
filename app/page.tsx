@@ -1,4 +1,4 @@
-import { auth } from "auth"
+import { auth } from "@/auth.ts"
 
 export default async function Index() {
   const session = await auth()

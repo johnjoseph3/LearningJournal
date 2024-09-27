@@ -8,9 +8,7 @@ import {
   StarterKit,
   Placeholder,
   AIHighlight,
-  // @ts-expect-error can't resolve types
 } from "novel/extensions";
-// @ts-expect-error can't resolve types
 import { UploadImagesPlugin } from "novel/plugins";
 
 import { cx } from "class-variance-authority";

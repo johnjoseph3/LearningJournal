@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils.ts";
 import { EditorBubbleItem, useEditor } from "novel";
 import {
   BoldIcon,
@@ -7,8 +7,8 @@ import {
   StrikethroughIcon,
   CodeIcon,
 } from "lucide-react";
-import type { SelectorItem } from "./node-selector";
-import { Button } from "@/components/ui/button";
+import type { SelectorItem } from "./node-selector.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export const TextButtons = () => {
   const { editor } = useEditor();
@@ -18,35 +18,30 @@ export const TextButtons = () => {
     {
       name: "bold",
       isActive: (editor) => editor.isActive("bold"),
-      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleBold().run(),
       icon: BoldIcon,
     },
     {
       name: "italic",
       isActive: (editor) => editor.isActive("italic"),
-      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleItalic().run(),
       icon: ItalicIcon,
     },
     {
       name: "underline",
       isActive: (editor) => editor.isActive("underline"),
-      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleUnderline().run(),
       icon: UnderlineIcon,
     },
     {
       name: "strike",
       isActive: (editor) => editor.isActive("strike"),
-      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleStrike().run(),
       icon: StrikethroughIcon,
     },
     {
       name: "code",
       isActive: (editor) => editor.isActive("code"),
-      // @ts-expect-error can't resolve types
       command: (editor) => editor.chain().focus().toggleCode().run(),
       icon: CodeIcon,
     },

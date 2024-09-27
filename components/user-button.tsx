@@ -1,14 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Button } from "./ui/button"
-import { auth } from "auth"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar.tsx"
+import { Button } from "./ui/button.tsx"
+import { auth } from "@/auth.ts"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { SignIn, SignOut } from "./auth-components"
+} from "./ui/dropdown-menu.tsx"
+import { SignIn, SignOut } from "./auth-components.tsx"
 
 export default async function UserButton() {
   const session = await auth()

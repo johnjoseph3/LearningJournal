@@ -1,5 +1,5 @@
-import CustomLink from "@/components/custom-link"
-import TestExample from "@/components/test"
+import CustomLink from "@/components/custom-link.tsx"
+import TestExample from "@/components/test.tsx"
 
 export default async function Page() {
   return (

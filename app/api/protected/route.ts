@@ -1,4 +1,4 @@
-import { auth } from "auth"
+import { auth } from "@/auth.ts"
 
 export const GET = auth((req) => {
   console.log

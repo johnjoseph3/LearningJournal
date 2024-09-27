@@ -1,7 +1,7 @@
 'use client'
 
 import { Entry } from "@prisma/client"
-import ContentForm from "../content-form";
+import ContentForm from "../content-form.tsx";
 
 export default function EntryEditor(
     props: { entry: Entry, editing: boolean, onChange: (val: string) => void, onSave: () => void }

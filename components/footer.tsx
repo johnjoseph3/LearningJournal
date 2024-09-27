@@ -1,4 +1,4 @@
-import CustomLink from "./custom-link"
+import CustomLink from "./custom-link.tsx"
 
 export default function Footer() {
   return (
