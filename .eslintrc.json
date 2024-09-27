@@ -4,6 +4,8 @@
     "next/typescript"
   ],
   "rules": {
+    "semi": [ "error", "never" ],
+    "quotes": [2, "double", { "avoidEscape": true }],
     "@typescript-eslint/no-explicit-any": 1,
     "react/no-unescaped-entities": 1,
     "@typescript-eslint/no-empty-object-type": 1,
