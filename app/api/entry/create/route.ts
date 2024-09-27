@@ -1,16 +1,14 @@
 import { auth } from "@/auth.ts"
 import { prisma } from "@/prisma/prisma.ts"
-import sanitizeHtml from "sanitize-html"
 
 export const POST = auth(async (req) => {
   if (req.auth) {
     const body = await req.json()
-    const cleanContent = sanitizeHtml(body.content);
   
     const entry = await prisma.entry.create({
         data: {
             pageId: body.pageId,
-            content: cleanContent
+            content: body.content
         }
     })
 

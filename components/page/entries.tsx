@@ -1,17 +1,17 @@
 'use client'
 
 import { Entry } from "@prisma/client"
-import ContentForm from "../content-form.tsx"
 import EntryEditor from "../entry/entry-editor.tsx"
 import { useState } from "react"
-
-const initialValue = ""
+import {
+    type JSONContent,
+} from "novel";
 
 export default function Entries(props: { entries: Entry[], pageId: number }) {
     const { entries, pageId } = props;
-    const [content, setContent] = useState("")
+    const [content, setContent] = useState<JSONContent>()
 
-    const onChange = (val: string) => {
+    const onChange = (val: JSONContent) => {
         setContent(val)
     }
 
@@ -31,7 +31,7 @@ export default function Entries(props: { entries: Entry[], pageId: number }) {
     }
 
     if (!entries.length) {
-        return <ContentForm content={initialValue} onChange={onChange} onSave={onSubmit} />
+        return <EntryEditor onChange={onChange} onSave={onSubmit} />
     }
 
     return (
