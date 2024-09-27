@@ -1,5 +1,5 @@
-import { prisma } from "../../../prisma/prisma"
-import Entries from "@/components/page/entries"
+import { prisma } from "@/prisma/prisma.ts"
+import Entries from "@/components/page/entries.tsx"
 
 export default async function Page({ params }: { params: { slug: string } }) {
     const page = await prisma.page.findUnique({

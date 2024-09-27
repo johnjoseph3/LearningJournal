@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   EditorRoot,
   EditorCommand,
@@ -11,19 +11,18 @@ import {
   EditorCommandList,
   EditorBubble,
 } from "novel";
-// @ts-expect-error can't resolve types
-import { ImageResizer, handleCommandNavigation } from "novel/extensions";
-import { defaultExtensions } from "./extensions";
-import { NodeSelector } from "./selectors/node-selector";
-import { LinkSelector } from "./selectors/link-selector";
-import { ColorSelector } from "./selectors/color-selector";
 
-import { TextButtons } from "./selectors/text-buttons";
-import { slashCommand, suggestionItems } from "./slash-command";
-// @ts-expect-error can't resolve types
+import { ImageResizer, handleCommandNavigation } from "novel/extensions";
+import { defaultExtensions } from "./extensions.ts";
+import { NodeSelector } from "./selectors/node-selector.tsx";
+import { LinkSelector } from "./selectors/link-selector.tsx";
+import { ColorSelector } from "./selectors/color-selector.tsx";
+
+import { TextButtons } from "./selectors/text-buttons.tsx";
+import { slashCommand, suggestionItems } from "./slash-command.tsx";
 import { handleImageDrop, handleImagePaste } from "novel/plugins";
-import { uploadFn } from "./image-upload";
-import { Separator } from "../ui/separator";
+import { uploadFn } from "./image-upload.ts";
+import { Separator } from "../ui/separator.tsx";
 
 const extensions = [
   ...defaultExtensions,

@@ -1,6 +1,6 @@
-import { MainNav } from "./main-nav"
-import UserButton from "./user-button"
-import { ModeToggle } from "./mode-toggle"
+import { MainNav } from "./main-nav.tsx"
+import UserButton from "./user-button.tsx"
+import { ModeToggle } from "./mode-toggle.tsx"
 
 export default function Header() {
   return (

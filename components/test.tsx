@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "./ui/button"
+import { Button } from "./ui/button.tsx"
 import { useState } from "react"
-import CustomLink from "./custom-link"
+import CustomLink from "./custom-link.tsx"
 
 export default function TestExample() {
     const [apiResponse, setApiResponse] = useState("")

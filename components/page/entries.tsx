@@ -1,8 +1,8 @@
 'use client'
 
 import { Entry } from "@prisma/client"
-import ContentForm from "../content-form"
-import EntryEditor from "../entry/entry-editor"
+import ContentForm from "../content-form.tsx"
+import EntryEditor from "../entry/entry-editor.tsx"
 import { useState } from "react"
 
 const initialValue = ""
@@ -27,7 +27,7 @@ export default function Entries(props: { entries: Entry[], pageId: number }) {
                 body: JSON.stringify(body),
             }
         )
-        const entry = await res.json()
+        await res.json()
     }
 
     if (!entries.length) {

@@ -5,7 +5,7 @@ import Google from "next-auth/providers/google"
 import type { NextAuthConfig } from "next-auth"
 
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "./prisma/prisma"
+import { prisma } from "@/prisma/prisma.ts"
 
 const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },

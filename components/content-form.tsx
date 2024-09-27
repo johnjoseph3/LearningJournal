@@ -1,12 +1,12 @@
 'use client'
 
-import Editor from './editor/advanced-editor'
-import { Button } from "./ui/button"
+import Editor from './editor/advanced-editor.tsx'
+import { Button } from "./ui/button.tsx"
 
 export default function ContentForm(
     props: {
         content: string,
-        onChange: (value: any) => void,
+        onChange: (value: string) => void,
         onSave: () => void
     }
 ) {

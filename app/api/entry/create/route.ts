@@ -1,5 +1,5 @@
-import { auth } from "auth"
-import { prisma } from "../../../../prisma/prisma"
+import { auth } from "@/auth.ts"
+import { prisma } from "@/prisma/prisma.ts"
 import sanitizeHtml from "sanitize-html"
 
 export const POST = auth(async (req) => {

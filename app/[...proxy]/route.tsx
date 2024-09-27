@@ -1,5 +1,5 @@
-import { auth } from "@/auth"
-import { NextRequest } from "next/server"
+import { auth } from "@/auth.ts"
+import { NextRequest } from "next/server.js"
 
 // Review if we need this, and why
 function stripContentEncoding(result: Response) {

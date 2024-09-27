@@ -11,9 +11,7 @@ import {
   Text,
   TextQuote,
 } from "lucide-react";
-// @ts-expect-error can't resolve types
 import { createSuggestionItems } from "novel/extensions";
-// @ts-expect-error can't resolve types
 import { Command, renderItems } from "novel/extensions";
 import { uploadFn } from "./image-upload";
 
