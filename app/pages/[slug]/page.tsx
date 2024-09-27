@@ -25,13 +25,19 @@ export default function Page({ params }: { params: { slug: string } }) {
   const onSubmit = async () => {
     const body = {
       pageId: data.page.id,
-      content
+      content,
+      order: data.page.entries.length + 1
     }
 
-    await fetch("/api/entry/create", {
+    const res = await fetch("/api/entry/create", {
       method: "POST",
       body: JSON.stringify(body)
     })
+
+    if (!res.ok) {
+      toast("Could not create entry")
+      return
+    }
 
     toast("Entry has been created")
 
@@ -48,11 +54,13 @@ export default function Page({ params }: { params: { slug: string } }) {
     })
   }
 
-  // empty object represents blank, editable editor
-  const entries = [...data.page.entries, {}].map((entry) => {
+  // blankEntry represents blank, editable editor
+  const blankEntry = { order: data.page.entries.length + 1 }
+
+  const entries = [...data.page.entries, blankEntry].map((entry) => {
     return {
       ...entry,
-      editable: JSON.stringify(entry) === "{}"
+      editable: JSON.stringify(entry) === `{"order":${blankEntry.order}}`
     }
   })
 
