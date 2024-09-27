@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Entries from "@/components/page/entries.tsx"
+import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import { type JSONContent } from "novel"
 
@@ -12,8 +13,9 @@ export default function Page({ params }: { params: { slug: string } }) {
     (url: string) => fetch(url).then((r) => r.json())
   )
 
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  if (error) return "error"
+
+  if (isLoading) return <Skeleton />
 
   const onChange = (val: JSONContent) => {
     setContent(val)
