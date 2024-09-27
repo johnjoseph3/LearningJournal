@@ -5,6 +5,7 @@ import Entries from "@/components/page/entries.tsx"
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import { type JSONContent } from "novel"
+import { toast } from "sonner"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<JSONContent>()
@@ -31,6 +32,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       method: "POST",
       body: JSON.stringify(body)
     })
+
+    toast("Entry has been created")
 
     mutate({
       page: {
