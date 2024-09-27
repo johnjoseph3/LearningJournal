@@ -1,20 +1,27 @@
 'use client'
 
+import {
+    type JSONContent,
+} from "novel";
+import Editor from '@/components/editor/advanced-editor.tsx'
+import { Button } from "@/components/ui/button.tsx"
 import { Entry } from "@prisma/client"
-import ContentForm from "../content-form.tsx";
 
 export default function EntryEditor(
-    props: { entry: Entry, editing: boolean, onChange: (val: string) => void, onSave: () => void }
+    props: { entry?: Entry, editing?: boolean, onChange: (val: JSONContent) => void, onSave: () => void }
 ) {
-    const { entry, editing, onChange, onSave } = props;
-
-    if (!editing) {
-        return <div className="prose">
-            <div dangerouslySetInnerHTML={{ __html: entry.content }} />
-        </div>
-    }
+    const { entry, editing = true, onChange, onSave } = props
+    const content = entry?.content as JSONContent
 
     return (
-        <ContentForm key={entry.id} content={entry.content} onChange={onChange} onSave={onSave} />
+        <>
+            <Editor
+                initialValue={content}
+                onChange={onChange}
+                editable={editing} />
+            {
+                editing && <Button onClick={onSave}>Save</Button>
+            }
+        </>
     )
 }

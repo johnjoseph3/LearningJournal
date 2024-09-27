@@ -30,10 +30,11 @@ const extensions = [
 ];
 
 interface EditorProp {
-  initialValue?: any;
-  onChange: (value: string) => void;
+  initialValue?: JSONContent | undefined;
+  onChange: (value: JSONContent) => void;
+  editable?: boolean;
 }
-const Editor = ({ initialValue, onChange }: EditorProp) => {
+const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
@@ -41,6 +42,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
   return (
     <EditorRoot>
       <EditorContent
+        editable={editable}
         immediatelyRender={false}
         className={"border p-4 rounded-xl"}
         {...(initialValue && { initialContent: initialValue })}
@@ -57,7 +59,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
           },
         }}
         onUpdate={({ editor }) => {
-          onChange(editor.getHTML());
+          onChange(editor.getJSON());
         }}
         slotAfter={<ImageResizer />}
       >
