@@ -43,11 +43,13 @@ export default function Page({ params }: { params: { slug: string } }) {
     })
   }
 
-  return (
-    <Entries
-      entries={data.page.entries}
-      onChange={onChange}
-      onSubmit={onSubmit}
-    />
-  )
+  // empty object represents blank, editable editor
+  const entries = [...data.page.entries, {}].map((entry) => {
+    return {
+      ...entry,
+      editable: JSON.stringify(entry) === "{}"
+    }
+  })
+
+  return <Entries entries={entries} onChange={onChange} onSubmit={onSubmit} />
 }

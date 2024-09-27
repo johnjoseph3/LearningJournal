@@ -4,8 +4,12 @@ import { Entry } from "@prisma/client"
 import EntryEditor from "../entry/entry-editor.tsx"
 import { type JSONContent } from "novel"
 
+export interface EntryData extends Entry {
+  editable: boolean
+}
+
 export default function Entries(props: {
-  entries: Entry[]
+  entries: EntryData[]
   onChange: (val: JSONContent) => void
   onSubmit: () => void
 }) {
@@ -18,13 +22,11 @@ export default function Entries(props: {
           <EntryEditor
             key={entry.id}
             entry={entry}
-            editing={false}
             onChange={onChange}
             onSave={onSubmit}
           />
         )
       })}
-      <EntryEditor onChange={onChange} onSave={onSubmit} />
     </div>
   )
 }
