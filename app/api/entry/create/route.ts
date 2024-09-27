@@ -2,8 +2,7 @@ import { auth } from "@/auth.ts"
 import { prisma } from "@/prisma/prisma.ts"
 import sanitizeHtml from "sanitize-html"
 
-// TODO FIX THIS ANY TYPE
-export const POST = auth(async (req: any) => {
+export const POST = auth(async (req) => {
   if (req.auth) {
     const body = await req.json()
     const cleanContent = sanitizeHtml(body.content);
