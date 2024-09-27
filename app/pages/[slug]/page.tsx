@@ -30,9 +30,17 @@ export default function Page({ params }: { params: { slug: string } }) {
       body: JSON.stringify(body)
     })
 
-    setContent({})
-
-    mutate()
+    mutate({
+      page: {
+        ...data.page,
+        entries: [
+          ...data.page.entries,
+          {
+            content
+          }
+        ]
+      }
+    })
   }
 
   return (
