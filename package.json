@@ -15,7 +15,7 @@
   },
   "author": "John Joseph <johnjosephnc@gmail.com>",
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.5.0",
@@ -42,7 +42,6 @@
     "novel": "^0.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sanitize-html": "^2.13.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
@@ -53,7 +52,6 @@
     "@types/node": "^20.12.8",
     "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.8",
-    "@types/sanitize-html": "^2.13.0",
     "autoprefixer": "^10.4.15",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.12",
