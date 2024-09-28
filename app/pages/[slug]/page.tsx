@@ -19,11 +19,11 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   if (isLoading) return <Skeleton />
 
-  const onChange = (val: JSONContent) => {
+  const handleChange = (val: JSONContent) => {
     setContent(val)
   }
 
-  const onSubmit = async () => {
+  const handleSave = async () => {
     const body = {
       pageId: data.page.id,
       content,
@@ -60,12 +60,15 @@ export default function Page({ params }: { params: { slug: string } }) {
   const blankEntry = { id: blankId, order: data.page.entries.length + 1 }
 
   const entries = [...data.page.entries, blankEntry].map((entry) => {
-    console.log("blankEntry.id", blankEntry.id)
     return {
       ...entry,
-      editable: entry.id === blankId
+      editable: entry.id === blankId,
+      blank: entry.id === blankId,
+      visible: entry.id !== blankId
     }
   })
 
-  return <Entries entries={entries} onChange={onChange} onSubmit={onSubmit} />
+  return (
+    <Entries entries={entries} onChange={handleChange} onSave={handleSave} />
+  )
 }

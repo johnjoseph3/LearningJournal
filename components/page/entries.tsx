@@ -5,6 +5,7 @@ import EntryEditor from "../entry/entry-editor.tsx"
 import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
 import { useState } from "react"
+import { Button } from "@/components/ui/button.tsx"
 
 import {
   DndContext,
@@ -29,14 +30,16 @@ import {
 
 export interface EntryData extends Entry {
   editable: boolean
+  blank: boolean
+  visible: boolean
 }
 
 export default function Entries(props: {
   entries: EntryData[]
   onChange: (val: JSONContent) => void
-  onSubmit: () => void
+  onSave: () => void
 }) {
-  const { entries, onChange, onSubmit } = props
+  const { entries, onChange, onSave } = props
   const [dragItems, setDragItems] = useState(entries)
 
   const sensors = useSensors(
@@ -55,12 +58,11 @@ export default function Entries(props: {
       const newOrder = arrayMove(dragItems, oldIndex, newIndex)
       setDragItems(newOrder)
 
-      const res = await fetch("/api/entry/reflow", {
+      await fetch("/api/entry/reflow", {
         method: "POST",
         // filter out blank
         body: JSON.stringify(newOrder.filter((entry) => entry.pageId))
       })
-      console.log("res", res)
     }
   }
 
@@ -70,26 +72,42 @@ export default function Entries(props: {
     )
   }
 
+  function handleNewEntry() {
+    setDragItems((prevItems) =>
+      prevItems.map((entry) => {
+        return {
+          ...entry,
+          visible: true
+        }
+      })
+    )
+  }
+
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-    >
-      <SortableContext items={entries} strategy={verticalListSortingStrategy}>
-        {dragItems.reverse().map((entry) => (
-          <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
-            {entry.id}
-            <EntryEditor
-              key={entry.id}
-              entry={entry}
-              onChange={onChange}
-              onSave={onSubmit}
-            />
-          </SortableLinks>
-        ))}
-      </SortableContext>
-    </DndContext>
+    <div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+      >
+        <SortableContext items={entries} strategy={verticalListSortingStrategy}>
+          {dragItems.map((entry) => {
+            return entry.visible ? (
+              <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
+                {entry.id}
+                <EntryEditor
+                  key={entry.id}
+                  entry={entry}
+                  onChange={onChange}
+                  onSave={onSave}
+                />
+              </SortableLinks>
+            ) : null
+          })}
+        </SortableContext>
+      </DndContext>
+      <Button onClick={handleNewEntry}>New entry</Button>
+    </div>
   )
 }
