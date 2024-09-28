@@ -6,8 +6,10 @@ export const POST = auth(async (req) => {
   if (req.auth) {
     const body: Entry[] = await req.json()
 
-    body.forEach(async (entry, index) => {
-      await prisma.entry.update({
+    const newOrdered = []
+
+    for await (const [index, entry] of body.entries()) {
+      const updated = await prisma.entry.update({
         where: {
           id: entry.id
         },
@@ -15,9 +17,10 @@ export const POST = auth(async (req) => {
           order: index + 1
         }
       })
-    })
+      newOrdered.push(updated)
+    }
 
-    return Response.json("successfully reflowed entries")
+    return Response.json(newOrdered)
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

@@ -38,9 +38,9 @@ export default function Entries(props: {
   entries: EntryData[]
   onChange: (val: JSONContent) => void
   onSave: () => void
+  onDragEnd: (entries: EntryData[]) => void
 }) {
-  const { entries, onChange, onSave } = props
-  const [dragItems, setDragItems] = useState(entries)
+  const { entries, onChange, onSave, onDragEnd } = props
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -52,35 +52,30 @@ export default function Entries(props: {
   async function handleDragEnd(event: any) {
     const { active, over } = event
 
-    if (active.id !== over.id) {
-      const oldIndex = dragItems.findIndex((item) => item.id === active.id)
-      const newIndex = dragItems.findIndex((item) => item.id === over.id)
-      const newOrder = arrayMove(dragItems, oldIndex, newIndex)
-      setDragItems(newOrder)
+    const oldIndex = entries.findIndex((item) => item.id === active.id)
+    const newIndex = entries.findIndex((item) => item.id === over.id)
+    const newOrder = arrayMove(entries, oldIndex, newIndex)
 
-      await fetch("/api/entry/reflow", {
-        method: "POST",
-        // filter out blank
-        body: JSON.stringify(newOrder.filter((entry) => entry.pageId))
-      })
+    if (active.id !== over.id) {
+      onDragEnd(newOrder)
     }
   }
 
   function handleDelete(idToDelete: number) {
-    setDragItems((prevItems) =>
-      prevItems.filter((item) => item.id !== idToDelete)
-    )
+    // setDragItems((prevItems) =>
+    //   prevItems.filter((item) => item.id !== idToDelete)
+    // )
   }
 
   function handleNewEntry() {
-    setDragItems((prevItems) =>
-      prevItems.map((entry) => {
-        return {
-          ...entry,
-          visible: true
-        }
-      })
-    )
+    // setDragItems((prevItems) =>
+    //   prevItems.map((entry) => {
+    //     return {
+    //       ...entry,
+    //       visible: true
+    //     }
+    //   })
+    // )
   }
 
   return (
@@ -92,7 +87,7 @@ export default function Entries(props: {
         modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       >
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
-          {dragItems.map((entry) => {
+          {entries.map((entry) => {
             return entry.visible ? (
               <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
                 {entry.id}
