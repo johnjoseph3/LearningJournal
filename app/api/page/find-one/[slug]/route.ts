@@ -10,7 +10,11 @@ export const GET = auth(async (req, context) => {
         slug
       },
       include: {
-        entries: true
+        entries: {
+          orderBy: {
+            order: "asc"
+          }
+        }
       }
     })
 

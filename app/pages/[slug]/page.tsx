@@ -6,6 +6,7 @@ import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import { type JSONContent } from "novel"
 import { toast } from "sonner"
+import { v4 as uuidv4 } from "uuid"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<JSONContent>()
@@ -55,12 +56,14 @@ export default function Page({ params }: { params: { slug: string } }) {
   }
 
   // blankEntry represents blank, editable editor
-  const blankEntry = { order: data.page.entries.length + 1 }
+  const blankId = uuidv4()
+  const blankEntry = { id: blankId, order: data.page.entries.length + 1 }
 
   const entries = [...data.page.entries, blankEntry].map((entry) => {
+    console.log("blankEntry.id", blankEntry.id)
     return {
       ...entry,
-      editable: JSON.stringify(entry) === `{"order":${blankEntry.order}}`
+      editable: entry.id === blankId
     }
   })
 

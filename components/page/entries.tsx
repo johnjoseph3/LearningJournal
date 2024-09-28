@@ -4,6 +4,7 @@ import { Entry } from "@prisma/client"
 import EntryEditor from "../entry/entry-editor.tsx"
 import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
+import { useState } from "react"
 
 import {
   DndContext,
@@ -36,6 +37,7 @@ export default function Entries(props: {
   onSubmit: () => void
 }) {
   const { entries, onChange, onSubmit } = props
+  const [dragItems, setDragItems] = useState(entries)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -44,23 +46,41 @@ export default function Entries(props: {
     })
   )
 
-  function handleDelete(idToDelete: number) {
-    //   setItems((prevItems) => prevItems.filter((item) => item.id !== idToDelete))
+  async function handleDragEnd(event: any) {
+    const { active, over } = event
+
+    if (active.id !== over.id) {
+      const oldIndex = dragItems.findIndex((item) => item.id === active.id)
+      const newIndex = dragItems.findIndex((item) => item.id === over.id)
+      const newOrder = arrayMove(dragItems, oldIndex, newIndex)
+      setDragItems(newOrder)
+
+      const res = await fetch("/api/entry/reflow", {
+        method: "POST",
+        // filter out blank
+        body: JSON.stringify(newOrder.filter((entry) => entry.pageId))
+      })
+      console.log("res", res)
+    }
   }
 
-  const sortedEntries = [...entries].sort((a, b) => b.order - a.order)
+  function handleDelete(idToDelete: number) {
+    setDragItems((prevItems) =>
+      prevItems.filter((item) => item.id !== idToDelete)
+    )
+  }
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
-      // onDragEnd={handleDragEnd}
+      onDragEnd={handleDragEnd}
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
       <SortableContext items={entries} strategy={verticalListSortingStrategy}>
-        {sortedEntries.reverse().map((entry) => (
+        {dragItems.reverse().map((entry) => (
           <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
-            {entry.order}
+            {entry.id}
             <EntryEditor
               key={entry.id}
               entry={entry}
