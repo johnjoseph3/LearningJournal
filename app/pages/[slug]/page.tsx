@@ -58,8 +58,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function handleDragEnd(newOrderedEntries: EntryData[]) {
     const res = await fetch("/api/entry/reflow", {
       method: "POST",
-      // filter out blank
-      body: JSON.stringify(newOrderedEntries.filter((entry) => entry.pageId))
+      body: JSON.stringify(newOrderedEntries.filter((entry) => !entry.blank))
     })
 
     if (!res.ok) {
