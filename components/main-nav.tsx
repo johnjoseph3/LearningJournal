@@ -11,7 +11,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
+  navigationMenuTriggerStyle
 } from "./ui/navigation-menu.tsx"
 import React from "react"
 import { Button } from "./ui/button.tsx"
@@ -33,9 +33,7 @@ export function MainNav() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="px-2">
-              Page
-            </NavigationMenuTrigger>
+            <NavigationMenuTrigger className="px-2">Page</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <ListItem href="/pages/python" title="Python">
@@ -43,14 +41,6 @@ export function MainNav() {
                 </ListItem>
               </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/mixed-example"
-              className={navigationMenuTriggerStyle()}
-            >
-              Mixed example
-            </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

@@ -5,7 +5,7 @@ export default async function Index() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold">NextAuth.js Example</h1>
+      <h1>Learning Journal</h1>
       <div className="flex flex-col rounded-md">
         <div className="rounded-t-md bg-secondary p-4 font-bold">
           Current Session

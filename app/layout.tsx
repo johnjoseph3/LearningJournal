@@ -4,20 +4,19 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 import Footer from "@/components/footer.tsx"
 import Header from "@/components/header.tsx"
-import { Toaster } from "@/components/ui/sonner.tsx";
+import { Toaster } from "@/components/ui/sonner.tsx"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "App with Auth",
-  description:
-    "Auth starter site",
+  title: "Learning Journal",
+  description: "Track your learning"
 }
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -26,7 +25,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         >
           <div className="flex h-full min-h-screen w-full flex-col justify-between">
             <Header />
-            <main className="mx-auto w-full max-w-3xl flex-auto px-4 py-4 sm:px-6 md:py-6">
+            <main className="mx-auto w-full max-w-3xl flex-auto px-4 py-4 sm:px-6 md:py-6 prose dark:prose-invert">
               {children}
               <Toaster />
             </main>
