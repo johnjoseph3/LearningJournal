@@ -96,7 +96,6 @@ export default function Entries(props: {
                 onDelete={handleDelete}
                 sortable={!entry.blank}
               >
-                order: {entry.order}
                 <EntryEditor
                   key={entry.id}
                   entry={entry}
@@ -108,7 +107,9 @@ export default function Entries(props: {
           })}
         </SortableContext>
       </DndContext>
-      <Button onClick={onNewEntry}>New entry</Button>
+      <Button onClick={onNewEntry} variant="ghost" className="mt-2">
+        New entry
+      </Button>
     </div>
   )
 }

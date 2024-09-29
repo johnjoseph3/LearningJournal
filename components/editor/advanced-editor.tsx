@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   EditorRoot,
   EditorCommand,
@@ -9,57 +9,54 @@ import {
   EditorContent,
   type JSONContent,
   EditorCommandList,
-  EditorBubble,
-} from "novel";
+  EditorBubble
+} from "novel"
 
-import { ImageResizer, handleCommandNavigation } from "novel/extensions";
-import { defaultExtensions } from "./extensions.ts";
-import { NodeSelector } from "./selectors/node-selector.tsx";
-import { LinkSelector } from "./selectors/link-selector.tsx";
-import { ColorSelector } from "./selectors/color-selector.tsx";
+import { ImageResizer, handleCommandNavigation } from "novel/extensions"
+import { defaultExtensions } from "./extensions.ts"
+import { NodeSelector } from "./selectors/node-selector.tsx"
+import { LinkSelector } from "./selectors/link-selector.tsx"
+import { ColorSelector } from "./selectors/color-selector.tsx"
 
-import { TextButtons } from "./selectors/text-buttons.tsx";
-import { slashCommand, suggestionItems } from "./slash-command.tsx";
-import { handleImageDrop, handleImagePaste } from "novel/plugins";
-import { uploadFn } from "./image-upload.ts";
-import { Separator } from "../ui/separator.tsx";
+import { TextButtons } from "./selectors/text-buttons.tsx"
+import { slashCommand, suggestionItems } from "./slash-command.tsx"
+import { handleImageDrop, handleImagePaste } from "novel/plugins"
+import { uploadFn } from "./image-upload.ts"
+import { Separator } from "../ui/separator.tsx"
 
-const extensions = [
-  ...defaultExtensions,
-  slashCommand,
-];
+const extensions = [...defaultExtensions, slashCommand]
 
 interface EditorProp {
-  initialValue?: JSONContent | undefined;
-  onChange: (value: JSONContent) => void;
-  editable?: boolean;
+  initialValue?: JSONContent | undefined
+  onChange: (value: JSONContent) => void
+  editable?: boolean
 }
 const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
-  const [openNode, setOpenNode] = useState(false);
-  const [openColor, setOpenColor] = useState(false);
-  const [openLink, setOpenLink] = useState(false);
+  const [openNode, setOpenNode] = useState(false)
+  const [openColor, setOpenColor] = useState(false)
+  const [openLink, setOpenLink] = useState(false)
 
   return (
     <EditorRoot>
       <EditorContent
         editable={editable}
         immediatelyRender={false}
-        className={"border p-4 rounded-xl"}
+        className={"p-4 rounded-xl"}
         {...(initialValue && { initialContent: initialValue })}
         extensions={extensions}
         editorProps={{
           handleDOMEvents: {
-            keydown: (_view, event) => handleCommandNavigation(event),
+            keydown: (_view, event) => handleCommandNavigation(event)
           },
           handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
           handleDrop: (view, event, _slice, moved) =>
             handleImageDrop(view, event, moved, uploadFn),
           attributes: {
-            class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
-          },
+            class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`
+          }
         }}
         onUpdate={({ editor }) => {
-          onChange(editor.getJSON());
+          onChange(editor.getJSON())
         }}
         slotAfter={<ImageResizer />}
       >
@@ -91,7 +88,7 @@ const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
 
         <EditorBubble
           tippyOptions={{
-            placement: "top",
+            placement: "top"
           }}
           className="flex w-fit max-w-[90vw] overflow-hidden rounded-md border border-muted bg-background shadow-xl"
         >
@@ -107,7 +104,7 @@ const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
         </EditorBubble>
       </EditorContent>
     </EditorRoot>
-  );
-};
+  )
+}
 
-export default Editor;
+export default Editor

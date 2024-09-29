@@ -138,6 +138,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   ].map((entry) => {
     if (!entry.blank) {
       entry.visible = true
+      entry.editable = false
     }
     return entry
   })
