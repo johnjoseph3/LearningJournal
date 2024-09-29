@@ -11,9 +11,10 @@ interface Item {
 interface SortableLinkCardProps {
   id: Item
   onDelete: (id: number) => void
+  sortable: boolean
 }
 
-const SortableLinks: FC<any> = ({ id, onDelete, children }) => {
+const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
   const uniqueId = id.id
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
@@ -54,19 +55,21 @@ const SortableLinks: FC<any> = ({ id, onDelete, children }) => {
               <path d="m6 6 12 12" />
             </svg>
           </button>
-          <button
-            {...attributes}
-            {...listeners}
-            className={` ${isCursorGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
-            aria-describedby={`DndContext-${uniqueId}`}
-          >
-            <svg viewBox="0 0 20 20" width="15">
-              <path
-                d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          </button>
+          {sortable ? (
+            <button
+              {...attributes}
+              {...listeners}
+              className={` ${isCursorGrabbing ? "cursor-grabbing" : "cursor-grab"} hidden group-hover:block`}
+              aria-describedby={`DndContext-${uniqueId}`}
+            >
+              <svg viewBox="0 0 20 20" width="15">
+                <path
+                  d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </button>
+          ) : null}
         </div>
       </Card>
     </div>

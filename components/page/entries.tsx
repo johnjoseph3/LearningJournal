@@ -81,7 +81,12 @@ export default function Entries(props: {
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
           {entries.map((entry) => {
             return entry.visible ? (
-              <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
+              <SortableLinks
+                key={entry.id}
+                id={entry}
+                onDelete={handleDelete}
+                sortable={!entry.blank}
+              >
                 order: {entry.order}
                 <EntryEditor
                   key={entry.id}
