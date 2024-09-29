@@ -8,6 +8,19 @@ import { type JSONContent } from "novel"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+
+  if (!res.ok) {
+    const error: any = new Error("An error occurred while fetching the data.")
+    error.info = await res.json()
+    error.status = res.status
+    throw error
+  }
+
+  return res.json()
+}
+
 export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<JSONContent>()
   const [blankEntry, setBlankEntry] = useState({
@@ -20,10 +33,11 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const { data, error, isLoading, mutate } = useSWR(
     `/api/page/find-one/${params.slug}`,
-    (url: string) => fetch(url).then((r) => r.json())
+    fetcher
   )
 
-  if (error) return "error"
+  if (error)
+    return error?.info?.message || "An error occurred while fetching the data."
 
   if (isLoading) return <Skeleton />
 
