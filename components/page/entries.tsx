@@ -1,9 +1,9 @@
 "use client"
 
 import { Entry } from "@prisma/client"
-import EntryEditor from "../entry/entry-editor.tsx"
 import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
+import Editor from "@/components/editor/advanced-editor.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { toast } from "sonner"
 
@@ -36,10 +36,10 @@ export interface EntryData extends Entry {
 
 export default function Entries(props: {
   entries: EntryData[]
-  onChange: (val: JSONContent) => void
-  onSave: () => void
+  onChange: (id: number, val: JSONContent) => void
   onDragEnd: (entries: EntryData[]) => void
   onDelete: (entry: EntryData) => void
+  onSave: (entry: EntryData) => void
   onNewEntry: () => void
 }) {
   const { entries, onChange, onSave, onDragEnd, onDelete, onNewEntry } = props
@@ -78,6 +78,13 @@ export default function Entries(props: {
     }
   }
 
+  function handleSave(id: number) {
+    const entry = entries.find((entry) => entry.id === id)
+    if (entry) {
+      onSave(entry)
+    }
+  }
+
   return (
     <div>
       <DndContext
@@ -88,18 +95,22 @@ export default function Entries(props: {
       >
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
           {entries.map((entry) => {
+            const content = entry?.content as JSONContent
+
             return entry.visible ? (
               <SortableLinks
                 key={entry.id}
                 id={entry}
                 onDelete={handleDelete}
+                onSave={handleSave}
                 sortable={!entry.blank}
               >
-                <EntryEditor
+                <Editor
                   key={entry.id}
-                  entry={entry}
+                  initialValue={content}
                   onChange={onChange}
-                  onSave={onSave}
+                  editable={entry?.editable}
+                  id={entry.id}
                 />
               </SortableLinks>
             ) : null

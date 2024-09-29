@@ -27,11 +27,17 @@ import { Separator } from "../ui/separator.tsx"
 const extensions = [...defaultExtensions, slashCommand]
 
 interface EditorProp {
+  id: number
   initialValue?: JSONContent | undefined
-  onChange: (value: JSONContent) => void
+  onChange: (id: number, value: JSONContent) => void
   editable?: boolean
 }
-const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
+const Editor = ({
+  initialValue,
+  onChange,
+  editable = true,
+  id
+}: EditorProp) => {
   const [openNode, setOpenNode] = useState(false)
   const [openColor, setOpenColor] = useState(false)
   const [openLink, setOpenLink] = useState(false)
@@ -52,11 +58,12 @@ const Editor = ({ initialValue, onChange, editable = true }: EditorProp) => {
           handleDrop: (view, event, _slice, moved) =>
             handleImageDrop(view, event, moved, uploadFn),
           attributes: {
-            class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`
+            class:
+              "prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full"
           }
         }}
         onUpdate={({ editor }) => {
-          onChange(editor.getJSON())
+          onChange(id, editor.getJSON())
         }}
         slotAfter={<ImageResizer />}
       >

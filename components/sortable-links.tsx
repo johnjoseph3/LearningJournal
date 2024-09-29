@@ -11,19 +11,27 @@ import {
   DialogTrigger,
   DialogFooter
 } from "@/components/ui/dialog"
+import { Cross1Icon, CheckIcon } from "@radix-ui/react-icons"
 
 interface Item {
   id: number
-  name: string
 }
 
 interface SortableLinkCardProps {
   id: Item
   onDelete: (id: number) => void
+  onSave: (id: number) => void
   sortable: boolean
+  children: any
 }
 
-const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
+const SortableLinks: FC<SortableLinkCardProps> = ({
+  id,
+  onSave,
+  onDelete,
+  sortable,
+  children
+}) => {
   const uniqueId = id.id
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
@@ -37,6 +45,10 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
     onDelete(uniqueId)
   }
 
+  const handleClick = () => {
+    onSave(uniqueId)
+  }
+
   const isCursorGrabbing = attributes["aria-pressed"]
 
   return (
@@ -47,21 +59,7 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
           <div className="hidden group-hover:block">
             <Dialog>
               <DialogTrigger>
-                <svg
-                  className="text-red-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
+                <Cross1Icon className="text-destructive" />
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -76,6 +74,9 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
                 </DialogHeader>
               </DialogContent>
             </Dialog>
+          </div>
+          <div className="hidden group-hover:block cursor-pointer">
+            <CheckIcon className="text-save" onClick={handleClick} />
           </div>
           {sortable ? (
             <button

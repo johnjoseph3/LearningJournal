@@ -22,7 +22,9 @@ const fetcher = async (url: string) => {
 }
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const [content, setContent] = useState<JSONContent>()
+  const [content, setContent] = useState<
+    { id: number | string; content: JSONContent }[]
+  >([])
   const [blankEntry, setBlankEntry] = useState({
     id: uuidv4(),
     content: undefined,
@@ -41,47 +43,19 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   if (isLoading) return <Skeleton />
 
-  const handleChange = (val: JSONContent) => {
-    setContent(val)
-  }
-
-  const handleSave = async () => {
-    const body = {
-      pageId: data.page.id,
-      content,
-      order: data.page.entries.length + 1
-    }
-
-    const res = await fetch("/api/entry/create", {
-      method: "POST",
-      body: JSON.stringify(body)
-    })
-
-    if (!res.ok) {
-      toast("Could not create entry")
+  const handleChange = (id: number, val: JSONContent) => {
+    if (!content?.find((item) => item.id === id)) {
+      setContent([...content, { id, content: val }])
       return
     }
 
-    toast("Entry has been created")
-
-    mutate({
-      page: {
-        ...data.page,
-        entries: [
-          ...data.page.entries,
-          {
-            content
-          }
-        ]
-      }
-    })
-
-    setBlankEntry({
-      id: uuidv4(),
-      content: undefined,
-      blank: true,
-      editable: true,
-      visible: false
+    setContent((prevItems) => {
+      return prevItems?.map((item) => {
+        if (item.id === id) {
+          item.content = val
+        }
+        return item
+      })
     })
   }
 
@@ -102,6 +76,55 @@ export default function Page({ params }: { params: { slug: string } }) {
         entries: newOrderedEntries
       }
     })
+  }
+
+  const handleSave = async (entry: EntryData) => {
+    const editedContent = content.find((item) => item.id === entry.id)
+    if (!editedContent) {
+      return
+    }
+
+    if (entry.blank) {
+      const body = {
+        pageId: data.page.id,
+        content: editedContent.content,
+        order: data.page.entries.length + 1
+      }
+
+      const res = await fetch("/api/entry/create", {
+        method: "POST",
+        body: JSON.stringify(body)
+      })
+
+      if (!res.ok) {
+        toast("Could not create entry")
+        return
+      }
+
+      toast("Entry has been created")
+
+      mutate({
+        page: {
+          ...data.page,
+          entries: [
+            ...data.page.entries,
+            {
+              content
+            }
+          ]
+        }
+      })
+
+      setBlankEntry({
+        id: uuidv4(),
+        content: undefined,
+        blank: true,
+        editable: true,
+        visible: false
+      })
+    } else {
+      // TODO call update on existing record
+    }
   }
 
   async function handleDelete(entry: EntryData) {
