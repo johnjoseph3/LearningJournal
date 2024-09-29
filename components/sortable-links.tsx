@@ -1,7 +1,16 @@
 import React, { FC } from "react"
 import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog"
 
 interface Item {
   id: number
@@ -24,7 +33,7 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
     transition
   }
 
-  const handleButtonClick = () => {
+  const handleDelete = () => {
     onDelete(uniqueId)
   }
 
@@ -35,26 +44,39 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
       <Card className="relative flex justify-between gap-5 group">
         <div className="min-w-0">{children}</div>
         <div className="flex justify-center items-center gap-4 min-w-10 pr-2">
-          <button
-            className="hidden group-hover:block"
-            onClick={handleButtonClick}
-          >
-            <svg
-              className="text-red-500"
-              xmlns="http://www.w3.org/2000/svg"
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
+          <div className="hidden group-hover:block">
+            <Dialog>
+              <DialogTrigger>
+                <svg
+                  className="text-red-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    Are you sure you want to delete this entry?
+                  </DialogTitle>
+                  <DialogFooter>
+                    <Button variant="destructive" onClick={handleDelete}>
+                      Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
           {sortable ? (
             <button
               {...attributes}

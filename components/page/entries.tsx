@@ -4,7 +4,6 @@ import { Entry } from "@prisma/client"
 import EntryEditor from "../entry/entry-editor.tsx"
 import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
-import { useState } from "react"
 import { Button } from "@/components/ui/button.tsx"
 import { toast } from "sonner"
 
