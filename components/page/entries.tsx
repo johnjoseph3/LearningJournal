@@ -39,8 +39,10 @@ export default function Entries(props: {
   onChange: (val: JSONContent) => void
   onSave: () => void
   onDragEnd: (entries: EntryData[]) => void
+  onDelete: (id: number) => void
+  onNewEntry: () => void
 }) {
-  const { entries, onChange, onSave, onDragEnd } = props
+  const { entries, onChange, onSave, onDragEnd, onDelete, onNewEntry } = props
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -61,23 +63,6 @@ export default function Entries(props: {
     }
   }
 
-  function handleDelete(idToDelete: number) {
-    // setDragItems((prevItems) =>
-    //   prevItems.filter((item) => item.id !== idToDelete)
-    // )
-  }
-
-  function handleNewEntry() {
-    // setDragItems((prevItems) =>
-    //   prevItems.map((entry) => {
-    //     return {
-    //       ...entry,
-    //       visible: true
-    //     }
-    //   })
-    // )
-  }
-
   return (
     <div>
       <DndContext
@@ -89,8 +74,8 @@ export default function Entries(props: {
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
           {entries.map((entry) => {
             return entry.visible ? (
-              <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
-                {entry.id}
+              <SortableLinks key={entry.id} id={entry} onDelete={onDelete}>
+                order: {entry.order}
                 <EntryEditor
                   key={entry.id}
                   entry={entry}
@@ -102,7 +87,7 @@ export default function Entries(props: {
           })}
         </SortableContext>
       </DndContext>
-      <Button onClick={handleNewEntry}>New entry</Button>
+      <Button onClick={onNewEntry}>New entry</Button>
     </div>
   )
 }

@@ -8,8 +8,14 @@ import { type JSONContent } from "novel"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 
+// blankEntry represents blank, editable editor
+const blankId = uuidv4()
+const blankEntry = { id: blankId }
+
 export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<JSONContent>()
+  const [isBlankVisible, setIsBlankVisible] = useState(false)
+
   const { data, error, isLoading, mutate } = useSWR(
     `/api/page/find-one/${params.slug}`,
     (url: string) => fetch(url).then((r) => r.json())
@@ -34,6 +40,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       method: "POST",
       body: JSON.stringify(body)
     })
+
+    // TODO clear content in blankEntry
 
     if (!res.ok) {
       toast("Could not create entry")
@@ -69,26 +77,49 @@ export default function Page({ params }: { params: { slug: string } }) {
     mutate({
       page: {
         ...data.page,
-        entries: [
-          ...data.page.entries,
-          {
-            content
-          }
-        ]
+        entries: newOrderedEntries
       }
     })
   }
 
-  // blankEntry represents blank, editable editor
-  const blankId = uuidv4()
-  const blankEntry = { id: blankId, order: data.page.entries.length + 1 }
+  async function handleDelete(id: number) {
+    const res = await fetch("/api/entry/delete", {
+      method: "POST",
+      body: JSON.stringify({ id, pageId: data.page.id })
+    })
 
-  const entries = [...data.page.entries, blankEntry].map((entry) => {
+    if (!res.ok) {
+      toast("Could not delete entry")
+      return
+    }
+
+    const filtered = data.page.entries.filter(
+      (entry: EntryData) => entry.id !== id
+    )
+
+    toast("Entry has been deleted")
+
+    mutate({
+      page: {
+        ...data.page,
+        entries: filtered
+      }
+    })
+  }
+
+  function handleNewEntry() {
+    setIsBlankVisible(true)
+  }
+
+  const entries = [
+    ...data.page.entries,
+    { ...blankEntry, order: data.page.entries.length + 1 }
+  ].map((entry) => {
     return {
       ...entry,
       editable: entry.id === blankId,
       blank: entry.id === blankId,
-      visible: entry.id !== blankId
+      visible: entry.id !== blankId || isBlankVisible
     }
   })
 
@@ -98,6 +129,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       onChange={handleChange}
       onSave={handleSave}
       onDragEnd={handleDragEnd}
+      onDelete={handleDelete}
+      onNewEntry={handleNewEntry}
     />
   )
 }
