@@ -33,8 +33,8 @@ const SortableLinks: FC<any> = ({ id, onDelete, sortable, children }) => {
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
       <Card className="relative flex justify-between gap-5 group">
-        <div>{children}</div>
-        <div className="flex justify-center items-center gap-4">
+        <div className="min-w-0">{children}</div>
+        <div className="flex justify-center items-center gap-4 min-w-10 pr-2">
           <button
             className="hidden group-hover:block"
             onClick={handleButtonClick}
