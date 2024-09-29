@@ -92,6 +92,7 @@ CREATE TABLE "Page" (
     "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Page_pkey" PRIMARY KEY ("id")
 );
@@ -99,10 +100,10 @@ CREATE TABLE "Page" (
 -- CreateTable
 CREATE TABLE "Entry" (
     "id" SERIAL NOT NULL,
-    "content" TEXT NOT NULL,
+    "content" JSONB NOT NULL,
     "pageId" INTEGER NOT NULL,
-    "order" INTEGER NOT NULL,
     "draft" BOOLEAN NOT NULL DEFAULT false,
+    "order" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -124,6 +125,9 @@ CREATE UNIQUE INDEX "Topic_name_userId_key" ON "Topic"("name", "userId");
 -- CreateIndex
 CREATE UNIQUE INDEX "Page_slug_key" ON "Page"("slug");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Page_slug_topicId_key" ON "Page"("slug", "topicId");
+
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -144,6 +148,9 @@ ALTER TABLE "Topic" ADD CONSTRAINT "Topic_categoryId_fkey" FOREIGN KEY ("categor
 
 -- AddForeignKey
 ALTER TABLE "Page" ADD CONSTRAINT "Page_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Page" ADD CONSTRAINT "Page_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Entry" ADD CONSTRAINT "Entry_pageId_fkey" FOREIGN KEY ("pageId") REFERENCES "Page"("id") ON DELETE CASCADE ON UPDATE CASCADE;

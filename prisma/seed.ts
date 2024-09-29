@@ -36,7 +36,8 @@ async function main() {
     create: {
       title: "Learn Python!",
       topicId: topic.id,
-      slug: "python"
+      slug: "python",
+      userId: john.id
     }
   })
 }

@@ -7,7 +7,8 @@ export const GET = auth(async (req, context) => {
   if (req.auth && slug) {
     const page = await prisma.page.findUniqueOrThrow({
       where: {
-        slug
+        slug,
+        userId: req.auth.user?.id
       },
       include: {
         entries: {
@@ -17,7 +18,7 @@ export const GET = auth(async (req, context) => {
         }
       }
     })
-
+     
     return Response.json({ page })
   }
 
