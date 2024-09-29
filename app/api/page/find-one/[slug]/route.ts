@@ -5,7 +5,7 @@ export const GET = auth(async (req, context) => {
   const slug = context.params?.slug as string
 
   if (req.auth && slug) {
-    const page = await prisma.page.findUniqueOrThrow({
+    const page = await prisma.page.findUnique({
       where: {
         slug,
         userId: req.auth.user?.id
@@ -18,6 +18,10 @@ export const GET = auth(async (req, context) => {
         }
       }
     })
+
+    if (!page) {
+      return Response.json({ message: "Could not find page" }, { status: 500 })
+    }
      
     return Response.json({ page })
   }
