@@ -39,7 +39,7 @@ export default function Entries(props: {
   onChange: (val: JSONContent) => void
   onSave: () => void
   onDragEnd: (entries: EntryData[]) => void
-  onDelete: (id: number) => void
+  onDelete: (entry: EntryData) => void
   onNewEntry: () => void
 }) {
   const { entries, onChange, onSave, onDragEnd, onDelete, onNewEntry } = props
@@ -63,6 +63,13 @@ export default function Entries(props: {
     }
   }
 
+  function handleDelete(id: number) {
+    const entry = entries.find((entry) => entry.id === id)
+    if (entry) {
+      onDelete(entry)
+    }
+  }
+
   return (
     <div>
       <DndContext
@@ -74,7 +81,7 @@ export default function Entries(props: {
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
           {entries.map((entry) => {
             return entry.visible ? (
-              <SortableLinks key={entry.id} id={entry} onDelete={onDelete}>
+              <SortableLinks key={entry.id} id={entry} onDelete={handleDelete}>
                 order: {entry.order}
                 <EntryEditor
                   key={entry.id}

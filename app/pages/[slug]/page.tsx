@@ -8,13 +8,15 @@ import { type JSONContent } from "novel"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 
-// blankEntry represents blank, editable editor
-const blankId = uuidv4()
-const blankEntry = { id: blankId }
-
 export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<JSONContent>()
-  const [isBlankVisible, setIsBlankVisible] = useState(false)
+  const [blankEntry, setBlankEntry] = useState({
+    id: uuidv4(),
+    content: undefined,
+    blank: true,
+    editable: true,
+    visible: false
+  })
 
   const { data, error, isLoading, mutate } = useSWR(
     `/api/page/find-one/${params.slug}`,
@@ -41,8 +43,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       body: JSON.stringify(body)
     })
 
-    // TODO clear content in blankEntry
-
     if (!res.ok) {
       toast("Could not create entry")
       return
@@ -60,6 +60,14 @@ export default function Page({ params }: { params: { slug: string } }) {
           }
         ]
       }
+    })
+
+    setBlankEntry({
+      id: uuidv4(),
+      content: undefined,
+      blank: true,
+      editable: true,
+      visible: false
     })
   }
 
@@ -82,7 +90,17 @@ export default function Page({ params }: { params: { slug: string } }) {
     })
   }
 
-  async function handleDelete(id: number) {
+  async function handleDelete(entry: EntryData) {
+    if (entry.blank) {
+      setBlankEntry({
+        ...blankEntry,
+        visible: false
+      })
+      return
+    }
+
+    const id = entry.id
+
     const res = await fetch("/api/entry/delete", {
       method: "POST",
       body: JSON.stringify({ id, pageId: data.page.id })
@@ -108,19 +126,20 @@ export default function Page({ params }: { params: { slug: string } }) {
   }
 
   function handleNewEntry() {
-    setIsBlankVisible(true)
+    setBlankEntry({
+      ...blankEntry,
+      visible: true
+    })
   }
 
   const entries = [
     ...data.page.entries,
     { ...blankEntry, order: data.page.entries.length + 1 }
   ].map((entry) => {
-    return {
-      ...entry,
-      editable: entry.id === blankId,
-      blank: entry.id === blankId,
-      visible: entry.id !== blankId || isBlankVisible
+    if (!entry.blank) {
+      entry.visible = true
     }
+    return entry
   })
 
   return (
