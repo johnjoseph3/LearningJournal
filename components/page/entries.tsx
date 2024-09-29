@@ -40,9 +40,11 @@ export default function Entries(props: {
   onDragEnd: (entries: EntryData[]) => void
   onDelete: (entry: EntryData) => void
   onSave: (entry: EntryData) => void
+  onEdit: (entry: EntryData) => void
   onNewEntry: () => void
 }) {
-  const { entries, onChange, onSave, onDragEnd, onDelete, onNewEntry } = props
+  const { entries, onChange, onSave, onEdit, onDragEnd, onDelete, onNewEntry } =
+    props
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -85,6 +87,13 @@ export default function Entries(props: {
     }
   }
 
+  function handleEdit(id: number) {
+    const entry = entries.find((entry) => entry.id === id)
+    if (entry) {
+      onEdit(entry)
+    }
+  }
+
   return (
     <div>
       <DndContext
@@ -103,7 +112,9 @@ export default function Entries(props: {
                 id={entry}
                 onDelete={handleDelete}
                 onSave={handleSave}
+                onEdit={handleEdit}
                 sortable={!entry.blank}
+                editable={entry?.editable}
               >
                 <Editor
                   key={entry.id}

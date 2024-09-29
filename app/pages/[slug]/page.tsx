@@ -25,6 +25,9 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<
     { id: number | string; content: JSONContent }[]
   >([])
+  const [currentlyEditingId, setCurrentlyEditingId] = useState<
+    number | string | null
+  >(null)
   const [blankEntry, setBlankEntry] = useState({
     id: uuidv4(),
     content: undefined,
@@ -114,17 +117,45 @@ export default function Page({ params }: { params: { slug: string } }) {
           ]
         }
       })
-
-      setBlankEntry({
-        id: uuidv4(),
-        content: undefined,
-        blank: true,
-        editable: true,
-        visible: false
-      })
     } else {
-      // TODO call update on existing record
+      const body = {
+        id: entry.id,
+        content: editedContent.content
+      }
+
+      const res = await fetch("/api/entry/update", {
+        method: "POST",
+        body: JSON.stringify(body)
+      })
+
+      if (!res.ok) {
+        toast("Could not update entry")
+        return
+      }
+
+      toast("Entry has been updated")
+
+      mutate({
+        page: {
+          ...data.page,
+          entries: [
+            ...data.page.entries,
+            {
+              content
+            }
+          ]
+        }
+      })
     }
+
+    setBlankEntry({
+      id: uuidv4(),
+      content: undefined,
+      blank: true,
+      editable: true,
+      visible: false
+    })
+    setCurrentlyEditingId(null)
   }
 
   async function handleDelete(entry: EntryData) {
@@ -133,6 +164,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         ...blankEntry,
         visible: false
       })
+      setCurrentlyEditingId(null)
       return
     }
 
@@ -162,18 +194,31 @@ export default function Page({ params }: { params: { slug: string } }) {
     })
   }
 
+  async function handleEdit(entry: EntryData) {
+    setCurrentlyEditingId(entry.id)
+  }
+
   function handleNewEntry() {
     setBlankEntry({
       ...blankEntry,
       visible: true
     })
+    setCurrentlyEditingId(blankEntry.id)
   }
 
   const entries = [
     ...data.page.entries,
     { ...blankEntry, order: data.page.entries.length + 1 }
   ].map((entry) => {
-    if (!entry.blank) {
+    // TODO this up. consider a different strategy for storing/attaching this metadata
+
+    if (currentlyEditingId && entry.id === currentlyEditingId) {
+      entry.visible = true
+      entry.editable = true
+    } else if (!currentlyEditingId && entry.blank) {
+      entry.visible = false
+      entry.editable = true
+    } else {
       entry.visible = true
       entry.editable = false
     }
@@ -185,6 +230,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       entries={entries}
       onChange={handleChange}
       onSave={handleSave}
+      onEdit={handleEdit}
       onDragEnd={handleDragEnd}
       onDelete={handleDelete}
       onNewEntry={handleNewEntry}

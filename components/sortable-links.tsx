@@ -9,9 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter
+  DialogFooter,
+  DialogClose
 } from "@/components/ui/dialog"
-import { Cross1Icon, CheckIcon } from "@radix-ui/react-icons"
+import { Cross1Icon, CheckIcon, Pencil1Icon } from "@radix-ui/react-icons"
 
 interface Item {
   id: number
@@ -21,16 +22,20 @@ interface SortableLinkCardProps {
   id: Item
   onDelete: (id: number) => void
   onSave: (id: number) => void
+  onEdit: (id: number) => void
   sortable: boolean
   children: any
+  editable: boolean
 }
 
 const SortableLinks: FC<SortableLinkCardProps> = ({
   id,
   onSave,
   onDelete,
+  onEdit,
   sortable,
-  children
+  children,
+  editable
 }) => {
   const uniqueId = id.id
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -49,11 +54,17 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
     onSave(uniqueId)
   }
 
+  const handleEdit = () => {
+    onEdit(uniqueId)
+  }
+
   const isCursorGrabbing = attributes["aria-pressed"]
 
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
-      <Card className="relative flex justify-between gap-5 group">
+      <Card
+        className={`relative flex justify-between gap-5 group  ${editable ? "border-slate-400" : null}`}
+      >
         <div className="min-w-0">{children}</div>
         <div className="flex justify-center items-center gap-4 min-w-10 pr-2">
           <div className="hidden group-hover:block">
@@ -67,9 +78,11 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
                     Are you sure you want to delete this entry?
                   </DialogTitle>
                   <DialogFooter>
-                    <Button variant="destructive" onClick={handleDelete}>
-                      Delete
-                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="destructive" onClick={handleDelete}>
+                        Delete
+                      </Button>
+                    </DialogClose>
                   </DialogFooter>
                 </DialogHeader>
               </DialogContent>
@@ -77,6 +90,9 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
           </div>
           <div className="hidden group-hover:block cursor-pointer">
             <CheckIcon className="text-save" onClick={handleClick} />
+          </div>
+          <div className="hidden group-hover:block cursor-pointer">
+            <Pencil1Icon className="text-save" onClick={handleEdit} />
           </div>
           {sortable ? (
             <button
