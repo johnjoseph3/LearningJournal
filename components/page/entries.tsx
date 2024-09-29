@@ -6,6 +6,7 @@ import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
 import { useState } from "react"
 import { Button } from "@/components/ui/button.tsx"
+import { toast } from "sonner"
 
 import {
   DndContext,
@@ -57,6 +58,14 @@ export default function Entries(props: {
     const oldIndex = entries.findIndex((item) => item.id === active.id)
     const newIndex = entries.findIndex((item) => item.id === over.id)
     const newOrder = arrayMove(entries, oldIndex, newIndex)
+
+    const activeEntry = entries.find((entry) => entry.id === active.id)
+    const overEntry = entries.find((entry) => entry.id === over.id)
+
+    if (activeEntry?.blank || overEntry?.blank) {
+      toast("save entry before reordering")
+      return
+    }
 
     if (active.id !== over.id) {
       onDragEnd(newOrder)
