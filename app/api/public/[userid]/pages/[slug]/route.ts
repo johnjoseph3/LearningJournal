@@ -2,13 +2,15 @@ import { auth } from "@/auth.ts"
 import { prisma } from "@/prisma/prisma.ts"
 
 export const GET = auth(async (req, context) => {
+  const userId = context.params?.userid as string
   const slug = context.params?.slug as string
 
   if (req.auth && slug) {
     const page = await prisma.page.findUnique({
       where: {
         slug,
-        public: true
+        public: true,
+        userId
       },
       include: {
         entries: {

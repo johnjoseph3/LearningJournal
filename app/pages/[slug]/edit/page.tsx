@@ -311,7 +311,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
           </div>
           <div>
             <a
-              href={`/public/pages/${slug}`}
+              href={data.publicUrl}
               className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
             >
               Public page

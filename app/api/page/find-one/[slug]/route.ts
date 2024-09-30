@@ -5,10 +5,12 @@ export const GET = auth(async (req, context) => {
   const slug = context.params?.slug as string
 
   if (req.auth && slug) {
+    const userId = req.auth.user?.id
+
     const page = await prisma.page.findUnique({
       where: {
         slug,
-        userId: req.auth.user?.id
+        userId
       },
       include: {
         entries: {
@@ -24,7 +26,7 @@ export const GET = auth(async (req, context) => {
       return Response.json({ message: "Could not find page" }, { status: 500 })
     }
 
-    return Response.json({ page })
+    return Response.json({ page, publicUrl: `/public/${userId}/pages/${slug}` })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

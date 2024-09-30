@@ -34,10 +34,14 @@ const fetcher = async (url: string) => {
   return res.json()
 }
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params
+export default function Page({
+  params
+}: {
+  params: { userid: string; slug: string }
+}) {
+  const { userid, slug } = params
   const { data, error, isLoading } = useSWR(
-    `/api/page/find-public/${slug}`,
+    `/api/public/${userid}/pages/${slug}`,
     fetcher
   )
 
