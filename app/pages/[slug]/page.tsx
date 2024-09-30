@@ -26,7 +26,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     return error?.info?.message || "An error occurred while fetching the data."
 
   if (isLoading) return <Skeleton />
-  console.log(data.page.entries)
 
   // display all content as html
 

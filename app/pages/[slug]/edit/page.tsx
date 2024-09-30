@@ -3,6 +3,8 @@
 import { useState } from "react"
 import EntriesEditor, { EntryData } from "@/components/page/entries-editor.tsx"
 import Skeleton from "@/components/skeleton"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import useSWR from "swr"
 import { type JSONContent } from "novel"
 import { toast } from "sonner"
@@ -262,16 +264,60 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     return entry
   })
 
+  const handleTogglePublic = async (isPublic: boolean) => {
+    const body = {
+      id: data.page.id,
+      public: isPublic
+    }
+
+    const res = await fetch("/api/page/update", {
+      method: "POST",
+      body: JSON.stringify(body)
+    })
+
+    if (!res.ok) {
+      toast("Could not update page")
+      return
+    }
+
+    toast(`Page is ${isPublic ? "public" : "private"}`)
+
+    mutate({
+      page: {
+        ...data.page,
+        public: isPublic
+      }
+    })
+  }
+
   return (
-    <EntriesEditor
-      entries={entries}
-      onChange={handleChange}
-      onSave={handleSave}
-      onEdit={handleEdit}
-      onDraftToggle={handleDraftToggle}
-      onDragEnd={handleDragEnd}
-      onDelete={handleDelete}
-      onNewEntry={handleNewEntry}
-    />
+    <>
+      <div className="flex justify-between mb-10">
+        <div>
+          <h1 className="font-bold leading-tight text-3xl capitalize">
+            {data.page.slug}
+          </h1>
+          <p className="text-muted-foreground">{data.page.topic.name}</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="public"
+            checked={data.page.public}
+            onCheckedChange={handleTogglePublic}
+          />
+          <Label htmlFor="public">Public</Label>
+        </div>
+      </div>
+      <EntriesEditor
+        entries={entries}
+        onChange={handleChange}
+        onSave={handleSave}
+        onEdit={handleEdit}
+        onDraftToggle={handleDraftToggle}
+        onDragEnd={handleDragEnd}
+        onDelete={handleDelete}
+        onNewEntry={handleNewEntry}
+      />
+    </>
   )
 }

@@ -15,6 +15,9 @@ export const GET = auth(async (req, context) => {
           orderBy: {
             order: "asc"
           }
+        },
+        topic: {
+          
         }
       }
     })
