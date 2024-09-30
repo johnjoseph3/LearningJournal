@@ -249,17 +249,16 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     { ...blankEntry, order: data.page.entries.length + 1 }
   ].map((entry) => {
     // TODO this up. consider a different strategy for storing/attaching this metadata
-
-    if (currentlyEditingId && entry.id === currentlyEditingId) {
+    if (!entry.blank) {
       entry.visible = true
-      entry.editable = true
-    } else if (!currentlyEditingId && entry.blank) {
-      entry.visible = false
+    }
+
+    if (currentlyEditingId === entry.id) {
       entry.editable = true
     } else {
-      entry.visible = true
       entry.editable = false
     }
+
     return entry
   })
 
