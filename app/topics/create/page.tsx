@@ -76,7 +76,7 @@ export default function Page() {
       categoryId: "",
       newCategoryName: "",
       topicName: "",
-      createNewCategory: false
+      createNewCategory: true
     }
   })
 
@@ -100,6 +100,7 @@ export default function Page() {
   if (isLoading) return <Skeleton />
 
   const createNewCategoryVal = form.getValues("createNewCategory")
+  const hasTopicCategories = data.topicCategories.length
 
   return (
     <>
@@ -135,6 +136,7 @@ export default function Page() {
                   </div>
                   <FormControl>
                     <Switch
+                      disabled={!hasTopicCategories}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
@@ -144,13 +146,29 @@ export default function Page() {
             />
             <FormField
               control={form.control}
-              name="categoryId"
+              name="newCategoryName"
               render={({ field }) => (
                 <FormItem className="mb-4">
+                  <FormControl>
+                    <Input
+                      placeholder="New category name"
+                      disabled={!createNewCategoryVal}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem className="mb-2">
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    disabled={createNewCategoryVal}
+                    disabled={createNewCategoryVal || !hasTopicCategories}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -171,27 +189,12 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="newCategoryName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="New category name"
-                      disabled={!createNewCategoryVal}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!hasTopicCategories ? (
+              <FormDescription>
+                No existing categories. You must create a new one.
+              </FormDescription>
+            ) : null}
           </div>
-          <FormDescription>
-            Topics belong to categories. You can select an existing category or
-            create a new one.
-          </FormDescription>
 
           <Button type="submit">Submit</Button>
         </form>
