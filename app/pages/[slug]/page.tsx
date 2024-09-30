@@ -18,7 +18,7 @@ const fetcher = async (url: string) => {
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { data, error, isLoading } = useSWR(
-    `/api/page/find-one/${params.slug}`,
+    `/api/page/find-public/${params.slug}`,
     fetcher
   )
 
@@ -28,6 +28,8 @@ export default function Page({ params }: { params: { slug: string } }) {
   if (isLoading) return <Skeleton />
 
   // display all content as html
+
+  console.log("data", data)
 
   return (
     <div>
