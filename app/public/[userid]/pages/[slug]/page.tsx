@@ -78,12 +78,9 @@ export default function Page({
   return (
     <>
       <div className="flex justify-between mb-10">
-        <div>
-          <h1 className="font-bold leading-tight text-3xl capitalize">
-            {data.page.slug}
-          </h1>
-          <p className="text-muted-foreground">{data.page.topic.name}</p>
-        </div>
+        <h1 className="font-bold leading-tight text-3xl capitalize">
+          {data.page.topic.name}
+        </h1>
         <div>
           <a
             href={`/pages/${slug}/edit`}

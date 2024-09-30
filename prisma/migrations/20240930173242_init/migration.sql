@@ -86,7 +86,6 @@ CREATE TABLE "Topic" (
 -- CreateTable
 CREATE TABLE "Page" (
     "id" SERIAL NOT NULL,
-    "title" VARCHAR(255) NOT NULL,
     "public" BOOLEAN NOT NULL DEFAULT false,
     "topicId" INTEGER NOT NULL,
     "slug" TEXT NOT NULL,

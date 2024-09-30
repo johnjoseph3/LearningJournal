@@ -24,7 +24,7 @@ async function main() {
     where: { id: 1 },
     update: {},
     create: {
-      name: "Programming",
+      name: "Python",
       userId: john.id,
       categoryId: topicCategory.id
     }
@@ -34,7 +34,6 @@ async function main() {
     where: { id: 1 },
     update: {},
     create: {
-      title: "Learn Python!",
       topicId: topic.id,
       slug: "python",
       userId: john.id

@@ -294,12 +294,9 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   return (
     <>
       <div className="flex justify-between mb-10">
-        <div>
-          <h1 className="font-bold leading-tight text-3xl capitalize">
-            {data.page.slug}
-          </h1>
-          <p className="text-muted-foreground">{data.page.topic.name}</p>
-        </div>
+        <h1 className="font-bold leading-tight text-3xl">
+          {data.page.topic.name}
+        </h1>
         <div>
           <div className="flex items-center space-x-2 mb-2">
             <Switch
@@ -309,14 +306,16 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
             />
             <Label htmlFor="public">Public</Label>
           </div>
-          <div>
-            <a
-              href={data.publicUrl}
-              className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >
-              Public page
-            </a>
-          </div>
+          {data.page.public ? (
+            <div>
+              <a
+                href={data.publicUrl}
+                className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              >
+                Public page
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
       <EntriesEditor

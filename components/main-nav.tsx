@@ -33,11 +33,16 @@ export function MainNav() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="px-2">Page</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="px-2">
+              Topics
+            </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/pages/python" title="Python">
-                  programming
+                <ListItem href="/topics" title="View">
+                  {/* programming */}
+                </ListItem>
+                <ListItem href="/topics/create" title="Create">
+                  {/* programming */}
                 </ListItem>
               </ul>
             </NavigationMenuContent>

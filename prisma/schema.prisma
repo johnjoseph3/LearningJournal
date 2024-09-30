@@ -104,7 +104,6 @@ model Topic {
 
 model Page {
   id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
   public    Boolean  @default(false)
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   topicId   Int
