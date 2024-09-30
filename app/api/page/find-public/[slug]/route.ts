@@ -12,6 +12,9 @@ export const GET = auth(async (req, context) => {
       },
       include: {
         entries: {
+          where: {
+            draft: false
+          },
           orderBy: {
             order: "asc"
           }
@@ -24,7 +27,9 @@ export const GET = auth(async (req, context) => {
       return Response.json({ message: "Could not find page" }, { status: 500 })
     }
 
-    return Response.json({ page })
+    const owner = req.auth?.user?.id === page.userId
+
+    return Response.json({ page, owner })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

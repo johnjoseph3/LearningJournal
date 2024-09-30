@@ -24,6 +24,7 @@ const fetcher = async (url: string) => {
 }
 
 export default function EditEntries({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const [content, setContent] = useState<
     { id: number | string; content: JSONContent }[]
   >([])
@@ -39,7 +40,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   })
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/page/find-one/${params.slug}`,
+    `/api/page/find-one/${slug}`,
     fetcher
   )
 
@@ -299,13 +300,23 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
           </h1>
           <p className="text-muted-foreground">{data.page.topic.name}</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="public"
-            checked={data.page.public}
-            onCheckedChange={handleTogglePublic}
-          />
-          <Label htmlFor="public">Public</Label>
+        <div>
+          <div className="flex items-center space-x-2 mb-2">
+            <Switch
+              id="public"
+              checked={data.page.public}
+              onCheckedChange={handleTogglePublic}
+            />
+            <Label htmlFor="public">Public</Label>
+          </div>
+          <div>
+            <a
+              href={`/public/pages/${slug}`}
+              className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >
+              Public page
+            </a>
+          </div>
         </div>
       </div>
       <EntriesEditor
