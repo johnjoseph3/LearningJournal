@@ -87,7 +87,9 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
         <Card
           className={`relative flex justify-between gap-5 group  ${editable ? "border-slate-400" : null}`}
         >
-          <div className="min-w-0">{children}</div>
+          <div className="min-w-0" style={{ maxWidth: "75%" }}>
+            {children}
+          </div>
           <div className="flex justify-center items-center gap-4 min-w-10 pr-2">
             <div className="hidden group-hover:block">
               <Dialog>
