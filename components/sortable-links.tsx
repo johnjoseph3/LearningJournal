@@ -12,7 +12,14 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog"
-import { Cross1Icon, CheckIcon, Pencil1Icon } from "@radix-ui/react-icons"
+import {
+  Cross1Icon,
+  CheckIcon,
+  Pencil1Icon,
+  FilePlusIcon,
+  FileMinusIcon
+} from "@radix-ui/react-icons"
+import { EntryData } from "./page/entries-editor"
 
 interface Item {
   id: number
@@ -20,12 +27,12 @@ interface Item {
 
 interface SortableLinkCardProps {
   id: Item
-  onDelete: (id: number) => void
-  onSave: (id: number) => void
-  onEdit: (id: number) => void
-  sortable: boolean
+  onDelete: (entry: EntryData) => void
+  onSave: (entry: EntryData) => void
+  onEdit: (entry: EntryData) => void
+  onDraftToggle: (entry: EntryData) => void
   children: any
-  editable: boolean
+  entry: EntryData
 }
 
 const SortableLinks: FC<SortableLinkCardProps> = ({
@@ -33,13 +40,17 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   onSave,
   onDelete,
   onEdit,
-  sortable,
+  onDraftToggle,
   children,
-  editable
+  entry
 }) => {
   const uniqueId = id.id
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
+
+  const sortable = !entry.blank
+  const editable = entry.editable
+  const draft = entry.draft
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -47,18 +58,24 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   }
 
   const handleDelete = () => {
-    onDelete(uniqueId)
+    onDelete(entry)
   }
 
   const handleClick = () => {
-    onSave(uniqueId)
+    onSave(entry)
   }
 
   const handleEdit = () => {
-    onEdit(uniqueId)
+    onEdit(entry)
+  }
+
+  const handleDraftToggle = () => {
+    onDraftToggle(entry)
   }
 
   const isCursorGrabbing = attributes["aria-pressed"]
+
+  console.log("draft", draft)
 
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
@@ -94,6 +111,17 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
           <div className="hidden group-hover:block cursor-pointer">
             <Pencil1Icon className="text-save" onClick={handleEdit} />
           </div>
+          {draft ? (
+            <FilePlusIcon
+              className="hidden group-hover:block"
+              onClick={handleDraftToggle}
+            />
+          ) : (
+            <FileMinusIcon
+              className="hidden group-hover:block"
+              onClick={handleDraftToggle}
+            />
+          )}
           {sortable ? (
             <button
               {...attributes}

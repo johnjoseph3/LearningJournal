@@ -9,9 +9,7 @@ export const POST = auth(async (req) => {
       where: {
         id: body.id
       },
-      data: {
-        content: body.content
-      }
+      data: body
     })
 
     return Response.json({ entry })

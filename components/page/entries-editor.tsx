@@ -34,17 +34,26 @@ export interface EntryData extends Entry {
   visible: boolean
 }
 
-export default function Entries(props: {
+export default function EntriesEditor(props: {
   entries: EntryData[]
   onChange: (id: number, val: JSONContent) => void
   onDragEnd: (entries: EntryData[]) => void
   onDelete: (entry: EntryData) => void
   onSave: (entry: EntryData) => void
   onEdit: (entry: EntryData) => void
+  onDraftToggle: (entry: EntryData) => void
   onNewEntry: () => void
 }) {
-  const { entries, onChange, onSave, onEdit, onDragEnd, onDelete, onNewEntry } =
-    props
+  const {
+    entries,
+    onChange,
+    onSave,
+    onEdit,
+    onDraftToggle,
+    onDragEnd,
+    onDelete,
+    onNewEntry
+  } = props
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -73,27 +82,6 @@ export default function Entries(props: {
     }
   }
 
-  function handleDelete(id: number) {
-    const entry = entries.find((entry) => entry.id === id)
-    if (entry) {
-      onDelete(entry)
-    }
-  }
-
-  function handleSave(id: number) {
-    const entry = entries.find((entry) => entry.id === id)
-    if (entry) {
-      onSave(entry)
-    }
-  }
-
-  function handleEdit(id: number) {
-    const entry = entries.find((entry) => entry.id === id)
-    if (entry) {
-      onEdit(entry)
-    }
-  }
-
   return (
     <div>
       <DndContext
@@ -110,11 +98,11 @@ export default function Entries(props: {
               <SortableLinks
                 key={entry.id}
                 id={entry}
-                onDelete={handleDelete}
-                onSave={handleSave}
-                onEdit={handleEdit}
-                sortable={!entry.blank}
-                editable={entry?.editable}
+                onDelete={onDelete}
+                onSave={onSave}
+                onEdit={onEdit}
+                onDraftToggle={onDraftToggle}
+                entry={entry}
               >
                 <Editor
                   key={entry.id}

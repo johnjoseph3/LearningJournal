@@ -87,7 +87,7 @@ CREATE TABLE "Topic" (
 CREATE TABLE "Page" (
     "id" SERIAL NOT NULL,
     "title" VARCHAR(255) NOT NULL,
-    "published" BOOLEAN NOT NULL DEFAULT false,
+    "public" BOOLEAN NOT NULL DEFAULT false,
     "topicId" INTEGER NOT NULL,
     "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -102,7 +102,7 @@ CREATE TABLE "Entry" (
     "id" SERIAL NOT NULL,
     "content" JSONB NOT NULL,
     "pageId" INTEGER NOT NULL,
-    "draft" BOOLEAN NOT NULL DEFAULT false,
+    "draft" BOOLEAN NOT NULL DEFAULT true,
     "order" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

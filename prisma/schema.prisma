@@ -105,7 +105,7 @@ model Topic {
 model Page {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255)
-  published Boolean  @default(false)
+  public    Boolean  @default(false)
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
   topicId   Int
   slug      String   @unique
@@ -123,7 +123,7 @@ model Entry {
   content   Json
   page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   pageId    Int
-  draft     Boolean  @default(false)
+  draft     Boolean  @default(true)
   order     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
