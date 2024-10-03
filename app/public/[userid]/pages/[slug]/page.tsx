@@ -48,7 +48,10 @@ export default function Page({
   const htmlContent = useMemo(() => {
     if (data?.page?.entries.length) {
       const html = data.page.entries.reduce((accum: string, curr: Entry) => {
-        const content = generateHTML(curr.content as JSONContent, [
+        const content = `<div class="entry hover:bg-secondary rounded-md p-2">
+        <div>Created at ${curr.createdAt}</div>
+        <div>Updated at ${curr.updatedAt}</div>
+        ${generateHTML(curr.content as JSONContent, [
           Document,
           Paragraph,
           Text,
@@ -62,7 +65,7 @@ export default function Page({
           OrderedList,
           BlockQuote,
           CodeBlock
-        ])
+        ])}</div>`
         return accum + " " + content
       }, "")
 
@@ -92,7 +95,7 @@ export default function Page({
       </div>
       {htmlContent ? (
         <div
-          className="prose dark:prose-invert"
+          className="prose dark:prose-invert entries-container"
           dangerouslySetInnerHTML={{
             __html: htmlContent || ""
           }}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, FocusEvent } from "react"
 import EntriesEditor, { EntryData } from "@/components/page/entries-editor.tsx"
 import Skeleton from "@/components/skeleton"
 import { Label } from "@/components/ui/label"
@@ -9,6 +9,7 @@ import useSWR from "swr"
 import { type JSONContent } from "novel"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
+import TopicNameInput from "@/components/topic/topic-name-input"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -25,12 +26,19 @@ const fetcher = async (url: string) => {
 
 export default function EditEntries({ params }: { params: { slug: string } }) {
   const { slug } = params
+
+  const { data, error, isLoading, mutate } = useSWR(
+    `/api/page/find-one/${slug}`,
+    fetcher
+  )
+
   const [content, setContent] = useState<
     { id: number | string; content: JSONContent }[]
   >([])
   const [currentlyEditingId, setCurrentlyEditingId] = useState<
     number | string | null
   >(null)
+  const [isEditingName, setIsEditingName] = useState(false)
   const [blankEntry, setBlankEntry] = useState({
     id: uuidv4(),
     content: undefined,
@@ -38,11 +46,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     editable: true,
     visible: false
   })
-
-  const { data, error, isLoading, mutate } = useSWR(
-    `/api/page/find-one/${slug}`,
-    fetcher
-  )
 
   if (error)
     return error?.info?.message || "An error occurred while fetching the data."
@@ -265,7 +268,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     return entry
   })
 
-  const handleTogglePublic = async (isPublic: boolean) => {
+  async function handleTogglePublic(isPublic: boolean) {
     const body = {
       id: data.page.id,
       public: isPublic
@@ -291,12 +294,57 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     })
   }
 
+  async function handleNameChange(name: string) {
+    if (name) {
+      const body = {
+        id: data.page.topic.id,
+        name
+      }
+
+      const res = await fetch("/api/topic/update", {
+        method: "POST",
+        body: JSON.stringify(body)
+      })
+
+      if (!res.ok) {
+        toast("Could not update topic")
+        return
+      }
+
+      mutate({
+        page: {
+          ...data.page,
+          topic: {
+            ...data.page.topic,
+            name
+          }
+        }
+      })
+    }
+  }
+
+  function handleTopicNameBlur() {
+    setIsEditingName(false)
+  }
+
   return (
     <>
       <div className="flex justify-between mb-10">
-        <h1 className="font-bold leading-tight text-3xl">
-          {data.page.topic.name}
-        </h1>
+        {isEditingName && data ? (
+          <TopicNameInput
+            initialName={data.page.topic.name}
+            onBlur={handleTopicNameBlur}
+            onChange={handleNameChange}
+          />
+        ) : (
+          <h1
+            className="font-bold leading-tight text-3xl cursor-pointer"
+            onClick={() => setIsEditingName(true)}
+          >
+            {data?.page?.topic?.name}
+          </h1>
+        )}
+
         <div>
           <div className="flex items-center space-x-2 mb-2">
             <Switch
