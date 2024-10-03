@@ -12,10 +12,10 @@ export function Heading(params: PropsWithChildren<HeadingProps>) {
 
   const classes = cn("font-extrabold", className, {
     "text-5xl my-8": size === "h1",
-    "text-4xl my-7": size === "h2",
-    "text-3xl my-6": size === "h3",
-    "text-2xl my-5": size === "h4",
-    "text-1xl my-4": size === "h5",
+    "text-4xl my-5": size === "h2",
+    "text-3xl my-3": size === "h3",
+    "text-2xl my-3": size === "h4",
+    "text-1xl my-3": size === "h5",
     "text-xl my-3": size === "h6"
   })
 

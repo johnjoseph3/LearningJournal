@@ -4,13 +4,12 @@ import Image from "next/image"
 
 import { cn } from "@/lib/utils.ts"
 import CustomLink from "./custom-link.tsx"
+import Link from "next/link"
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from "./ui/navigation-menu.tsx"
 import React from "react"
@@ -33,19 +32,11 @@ export function MainNav() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="px-2">
-              Topics
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/topics" title="View">
-                  {/* programming */}
-                </ListItem>
-                <ListItem href="/topics/create" title="Create">
-                  {/* programming */}
-                </ListItem>
-              </ul>
-            </NavigationMenuContent>
+            <Link href="/topics" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Topics
+              </NavigationMenuLink>
+            </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

@@ -37,14 +37,23 @@ export default function Page() {
 
   return (
     <>
-      <Heading size="h1" className="mb-10">
-        Topics
-      </Heading>
+      <div className="flex justify-between">
+        <Heading size="h1" className="mb-10">
+          Topics
+        </Heading>
+        <div className="flex items-center">
+          <CustomLink href="/topics/create" className="underline block">
+            New
+          </CustomLink>
+        </div>
+      </div>
       {Object.keys(groupedTopics).map((keyName, i) => {
         const topics = groupedTopics[keyName]
         return (
           <div key={i} className="mb-4">
-            <h3 className="font-bold ">{keyName}</h3>
+            <Heading size="h3" className="font-normal">
+              {keyName}
+            </Heading>
             {topics.map((topic: any) => {
               const page = topic.page[0]
               const url = page.public
