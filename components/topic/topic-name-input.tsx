@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { useDebouncedCallback } from "use-debounce"
 
 interface TopicNameInputProps {
@@ -17,7 +17,7 @@ export default function TopicNameInput({
 
   const debouncedOnChange = useDebouncedCallback((name: string) => {
     onChange(name)
-  }, 1000)
+  }, 300)
 
   return (
     <Input

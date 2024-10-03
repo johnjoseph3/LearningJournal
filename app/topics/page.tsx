@@ -3,6 +3,7 @@
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import CustomLink from "@/components/custom-link"
+import { Heading } from "@/components/ui/heading"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -36,7 +37,9 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="font-bold leading-tight text-3xl mb-10">Topics</h1>
+      <Heading size="h1" className="mb-10">
+        Topics
+      </Heading>
       {Object.keys(groupedTopics).map((keyName, i) => {
         const topics = groupedTopics[keyName]
         return (

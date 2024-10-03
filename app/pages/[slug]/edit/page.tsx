@@ -21,6 +21,7 @@ import {
   DialogClose
 } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
+import { Heading } from "@/components/ui/heading"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -328,7 +329,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     if (name) {
       const body = {
         id: data.page.topic.id,
-        name
+        name: name.trim()
       }
 
       const res = await fetch("/api/topic/update", {
@@ -368,12 +369,13 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
               onChange={handleNameChange}
             />
           ) : (
-            <h1
-              className="font-bold leading-tight text-3xl cursor-pointer"
+            <Heading
+              size="h1"
+              className="cursor-pointer"
               onClick={() => setIsEditingName(true)}
             >
               {data?.page?.topic?.name}
-            </h1>
+            </Heading>
           )}
           {data.page.public ? (
             <div>

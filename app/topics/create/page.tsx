@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { Heading } from "@/components/ui/heading"
 import {
   Form,
   FormControl,
@@ -107,8 +108,7 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="font-bold leading-tight text-3xl mb-10">New topic</h1>
-
+      <Heading size="h1">New topic</Heading>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

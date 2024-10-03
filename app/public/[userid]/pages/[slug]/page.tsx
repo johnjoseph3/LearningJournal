@@ -18,6 +18,7 @@ import TaskItem from "@tiptap/extension-task-item"
 import OrderedList from "@tiptap/extension-ordered-list"
 import BlockQuote from "@tiptap/extension-blockquote"
 import CodeBlock from "@tiptap/extension-code-block"
+import { Heading as FontHeading } from "@/components/ui/heading"
 
 import { type JSONContent } from "novel"
 
@@ -81,9 +82,9 @@ export default function Page({
   return (
     <>
       <div className="flex justify-between mb-10">
-        <h1 className="font-bold leading-tight text-3xl capitalize">
+        <FontHeading size="h1" className="capitalize">
           {data.page.topic.name}
-        </h1>
+        </FontHeading>
         <div>
           <a
             href={`/pages/${slug}/edit`}

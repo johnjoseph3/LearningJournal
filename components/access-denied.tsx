@@ -1,9 +1,10 @@
 import { signIn } from "next-auth/react"
+import { Heading } from "@/components/ui/heading"
 
 export default function AccessDenied() {
   return (
     <>
-      <h1>Access Denied</h1>
+      <Heading size="h1">Access Denied</Heading>
       <p>
         <a
           href="/api/auth/signin"
