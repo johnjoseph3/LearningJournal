@@ -49,7 +49,7 @@ export const POST = auth(async (req) => {
       }
     })
 
-    await prisma.page.create({
+    const page = await prisma.page.create({
       data: {
         topicId: topic.id,
         slug: slugify(topicName),
@@ -57,7 +57,12 @@ export const POST = auth(async (req) => {
       }
     })
 
-    return Response.json({ topic })
+    return Response.json({
+      topic: {
+        ...topic,
+        pages: [page]
+      }
+    })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

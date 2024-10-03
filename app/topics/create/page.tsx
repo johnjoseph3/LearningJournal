@@ -91,7 +91,10 @@ export default function Page() {
       return
     }
 
-    router.push("/topics")
+    const body = await res.json()
+    const page = body.topic.pages[0]
+
+    router.push(`/pages/${page.slug}/edit`)
   }
 
   if (error)

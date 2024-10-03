@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, FocusEvent } from "react"
+import { useState } from "react"
 import EntriesEditor, { EntryData } from "@/components/page/entries-editor.tsx"
 import Skeleton from "@/components/skeleton"
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,17 @@ import { type JSONContent } from "novel"
 import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 import TopicNameInput from "@/components/topic/topic-name-input"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose
+} from "@/components/ui/dialog"
+import { useRouter } from "next/navigation"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -26,6 +37,7 @@ const fetcher = async (url: string) => {
 
 export default function EditEntries({ params }: { params: { slug: string } }) {
   const { slug } = params
+  const router = useRouter()
 
   const { data, error, isLoading, mutate } = useSWR(
     `/api/page/find-one/${slug}`,
@@ -164,7 +176,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     setCurrentlyEditingId(null)
   }
 
-  async function handleDelete(entry: EntryData) {
+  async function handleEntryDelete(entry: EntryData) {
     if (entry.blank) {
       setBlankEntry({
         ...blankEntry,
@@ -294,6 +306,24 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     })
   }
 
+  async function handleTopicDelete() {
+    const body = {
+      id: data.page.topic.id
+    }
+
+    const res = await fetch("/api/topic/delete", {
+      method: "POST",
+      body: JSON.stringify(body)
+    })
+
+    if (!res.ok) {
+      toast("Could not delete topic")
+      return
+    }
+
+    router.push("/topics")
+  }
+
   async function handleNameChange(name: string) {
     if (name) {
       const body = {
@@ -330,30 +360,21 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   return (
     <>
       <div className="flex justify-between mb-10">
-        {isEditingName && data ? (
-          <TopicNameInput
-            initialName={data.page.topic.name}
-            onBlur={handleTopicNameBlur}
-            onChange={handleNameChange}
-          />
-        ) : (
-          <h1
-            className="font-bold leading-tight text-3xl cursor-pointer"
-            onClick={() => setIsEditingName(true)}
-          >
-            {data?.page?.topic?.name}
-          </h1>
-        )}
-
         <div>
-          <div className="flex items-center space-x-2 mb-2">
-            <Switch
-              id="public"
-              checked={data.page.public}
-              onCheckedChange={handleTogglePublic}
+          {isEditingName && data ? (
+            <TopicNameInput
+              initialName={data.page.topic.name}
+              onBlur={handleTopicNameBlur}
+              onChange={handleNameChange}
             />
-            <Label htmlFor="public">Public</Label>
-          </div>
+          ) : (
+            <h1
+              className="font-bold leading-tight text-3xl cursor-pointer"
+              onClick={() => setIsEditingName(true)}
+            >
+              {data?.page?.topic?.name}
+            </h1>
+          )}
           {data.page.public ? (
             <div>
               <a
@@ -365,6 +386,36 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
             </div>
           ) : null}
         </div>
+
+        <div className="flex flex-col">
+          <div className="flex items-center space-x-2 mb-2">
+            <Switch
+              id="public"
+              checked={data.page.public}
+              onCheckedChange={handleTogglePublic}
+            />
+            <Label htmlFor="public">Public</Label>
+          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="destructive">Delete</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  Are you sure you want to delete {data.page.topic.name}?
+                </DialogTitle>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="destructive" onClick={handleTopicDelete}>
+                      Delete
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       <EntriesEditor
         entries={entries}
@@ -373,7 +424,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
         onEdit={handleEdit}
         onDraftToggle={handleDraftToggle}
         onDragEnd={handleDragEnd}
-        onDelete={handleDelete}
+        onDelete={handleEntryDelete}
         onNewEntry={handleNewEntry}
       />
     </>
