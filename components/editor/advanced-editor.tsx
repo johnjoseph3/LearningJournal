@@ -9,7 +9,8 @@ import {
   EditorContent,
   type JSONContent,
   EditorCommandList,
-  EditorBubble
+  EditorBubble,
+  EditorInstance
 } from "novel"
 
 import { ImageResizer, handleCommandNavigation } from "novel/extensions"
@@ -23,6 +24,7 @@ import { slashCommand, suggestionItems } from "./slash-command.tsx"
 import { handleImageDrop, handleImagePaste } from "novel/plugins"
 import { uploadFn } from "./image-upload.ts"
 import { Separator } from "../ui/separator.tsx"
+import { useDebouncedCallback } from "use-debounce"
 
 const extensions = [...defaultExtensions, slashCommand]
 
@@ -32,6 +34,7 @@ interface EditorProp {
   onChange: (id: number, value: JSONContent) => void
   editable?: boolean
 }
+
 const Editor = ({
   initialValue,
   onChange,
@@ -41,6 +44,13 @@ const Editor = ({
   const [openNode, setOpenNode] = useState(false)
   const [openColor, setOpenColor] = useState(false)
   const [openLink, setOpenLink] = useState(false)
+
+  const debouncedUpdates = useDebouncedCallback(
+    async (props: { editor: EditorInstance; transaction: any }) => {
+      onChange(id, props.editor.getJSON())
+    },
+    500
+  )
 
   return (
     <EditorRoot>
@@ -62,9 +72,7 @@ const Editor = ({
               "prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full"
           }
         }}
-        onUpdate={({ editor }) => {
-          onChange(id, editor.getJSON())
-        }}
+        onUpdate={debouncedUpdates}
         slotAfter={<ImageResizer />}
       >
         <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
