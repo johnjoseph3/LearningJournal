@@ -181,7 +181,10 @@ export default function Page() {
                     <SelectContent>
                       {data.topicCategories.map((category: TopicCategory) => {
                         return (
-                          <SelectItem value={category.id.toString()}>
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
                             {category.name}
                           </SelectItem>
                         )

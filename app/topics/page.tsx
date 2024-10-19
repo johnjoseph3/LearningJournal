@@ -61,7 +61,11 @@ export default function Page() {
                 : `/pages/${page.slug}/edit`
 
               return (
-                <CustomLink href={url} className="underline block">
+                <CustomLink
+                  key={topic.id}
+                  href={url}
+                  className="underline block"
+                >
                   {topic.name}
                 </CustomLink>
               )

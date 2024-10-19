@@ -37,6 +37,7 @@ export default function Page() {
       {data.topicCategories.map((category: TopicCategory) => {
         return (
           <CustomLink
+            key={category.id}
             href={`/categories/${category.id}/edit`}
             className="underline block"
           >
