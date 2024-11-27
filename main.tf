@@ -153,12 +153,22 @@ resource "aws_security_group_rule" "allow_postgres_in" {
   security_group_id        = aws_security_group.rds_sg.id
 }
 
+resource "tls_private_key" "lj" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "lj" {
+  key_name   = "lj-key"
+  public_key = tls_private_key.lj.public_key_openssh
+}
+
 resource "aws_instance" "lj" {
   ami                         = "ami-06b21ccaeff8cd686"
   instance_type               = var.ec2_instance_type
   vpc_security_group_ids      = [aws_security_group.default.id]
   subnet_id                   = aws_subnet.public_subnet_a.id
-  key_name                    = var.key_pair
+  key_name                    = aws_key_pair.lj.key_name
   associate_public_ip_address = true
 
   root_block_device {
@@ -167,6 +177,43 @@ resource "aws_instance" "lj" {
     volume_size = 50
     volume_type = "gp2"
   }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y nginx
+              systemctl start nginx
+              systemctl enable nginx
+
+              # Install Node.js
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+              nvm install 22
+
+              # Install PM2
+              npm install -g pm2
+
+              # Nginx configuration
+              cat <<EOT | tee /etc/nginx/conf.d/nextjs-app.conf
+              server {
+                listen 80;
+                server_name lj.com;
+
+                location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+                }
+              }
+              EOT
+
+              systemctl restart nginx
+              EOF
 
   tags = {
     Name = "LearningJournal"
@@ -190,4 +237,9 @@ resource "aws_db_instance" "postgres" {
   password               = var.postgres_password
   skip_final_snapshot    = true
   multi_az               = true
+}
+
+output "private_key" {
+  value     = tls_private_key.lj.private_key_pem
+  sensitive = true
 }
