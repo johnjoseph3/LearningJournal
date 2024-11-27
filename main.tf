@@ -180,26 +180,29 @@ resource "aws_instance" "lj" {
 
   user_data = <<-EOF
               #!/bin/bash
-              yum update -y
-              yum install -y nginx
-              systemctl start nginx
-              systemctl enable nginx
+              sudo yum update -y
+              sudo yum install -y nginx
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
 
-              # Install Node.js
+              # Switch to ec2-user
+              sudo -i -u ec2-user bash << 'EOF_USER'
+              # Install Node.js using nvm
               curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-              export NVM_DIR="$HOME/.nvm"
+              export NVM_DIR="/home/ec2-user/.nvm"
               [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
               [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
               nvm install 22
 
               # Install PM2
               npm install -g pm2
+              EOF_USER
 
               # Nginx configuration
-              cat <<EOT | tee /etc/nginx/conf.d/nextjs-app.conf
+              cat <<EOT | sudo tee /etc/nginx/conf.d/nextjs-app.conf
               server {
                 listen 80;
-                server_name lj.com;
+                server_name your_domain_or_ip;
 
                 location / {
                   proxy_pass http://localhost:3000;
@@ -212,7 +215,8 @@ resource "aws_instance" "lj" {
               }
               EOT
 
-              systemctl restart nginx
+              sudo nginx -t
+              sudo systemctl restart nginx
               EOF
 
   tags = {
