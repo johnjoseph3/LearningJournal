@@ -115,6 +115,16 @@ resource "aws_security_group_rule" "allow_http_in_api" {
   security_group_id = aws_security_group.default.id
 }
 
+resource "aws_security_group_rule" "allow_https_in_api" {
+  description       = "Allow inbound HTTPS traffic"
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.default.id
+}
+
 # Allow all outbound traffic
 resource "aws_security_group_rule" "allow_all_out" {
   description       = "Allow outbound traffic"
@@ -182,6 +192,7 @@ resource "aws_instance" "lj" {
               #!/bin/bash
               sudo yum update -y
               sudo yum install -y nginx
+              sudo yum install -y certbot python3-certbot-nginx
               sudo systemctl start nginx
               sudo systemctl enable nginx
 
@@ -202,21 +213,37 @@ resource "aws_instance" "lj" {
               cat <<EOT | sudo tee /etc/nginx/conf.d/nextjs-app.conf
               server {
                 listen 80;
-                server_name your_domain_or_ip;
+                server_name share-learn.com;
 
                 location / {
-                  proxy_pass http://localhost:3000;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
-                  proxy_set_header Connection 'upgrade';
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
+                  proxy_pass http://127.0.0.1:3000;
+                }
+              }
+
+              # Obtain SSL certificate from Let's Encrypt
+              sudo systemctl stop nginx
+              sudo certbot --nginx -d share-learn.com --non-interactive --agree-tos --email ${var.certbot_email}
+              sudo systemctl start nginx
+
+              server {
+                listen 443 ssl;
+                server_name share-learn.com;
+
+                ssl_certificate /etc/letsencrypt/live/share-learn.com/fullchain.pem;
+                ssl_certificate_key /etc/letsencrypt/live/share-learn.com/privkey.pem;
+
+                location / {
+                  proxy_pass http://127.0.0.1:3000;
                 }
               }
               EOT
 
               sudo nginx -t
               sudo systemctl restart nginx
+
+              # Set up automatic certificate renewal
+              echo "0 0,12 * * * root certbot renew --quiet" | sudo tee -a /etc/crontab > /dev/null
+
               EOF
 
   tags = {
@@ -236,8 +263,8 @@ resource "aws_db_instance" "postgres" {
   instance_class         = "db.t4g.micro"
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.private_db_subnet.name
-  db_name                = "lj"
-  username               = "lj"
+  db_name                = "learning_journal"
+  username               = "jj"
   password               = var.postgres_password
   skip_final_snapshot    = true
   multi_az               = true

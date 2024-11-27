@@ -1,4 +1,3 @@
-
 variable "aws_region" {
   type    = string
   default = "us-east-1"
@@ -15,8 +14,12 @@ variable "postgres_password" {
   default   = "your_postgres_password"
 }
 
-variable "key_pair" {
-  type      = string
-  sensitive = true
-  default   = "your_key_pair"
+variable "route53_zone_id" {
+  type    = string
+  default = "your_route53_zone_id"
+}
+
+variable "certbot_email" {
+  type    = string
+  default = "your_email@example.com"
 }
