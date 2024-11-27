@@ -10,9 +10,7 @@ import { prisma } from "@/prisma/prisma.ts"
 const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: PrismaAdapter(prisma),
-  providers: [
-    Google,
-  ],
+  providers: [Google],
   basePath: "/auth",
   callbacks: {
     authorized({ request, auth }) {
@@ -32,12 +30,12 @@ const config = {
         session.accessToken = token.accessToken
       }
       return session
-    },
+    }
   },
   experimental: {
-    enableWebAuthn: true,
+    enableWebAuthn: true
   },
-  debug: process.env.NODE_ENV !== "production" ? true : false,
+  debug: process.env.NODE_ENV !== "production" ? true : false
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

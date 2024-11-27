@@ -263,8 +263,8 @@ resource "aws_db_instance" "postgres" {
   instance_class         = "db.t4g.micro"
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.private_db_subnet.name
-  db_name                = "learning_journal"
-  username               = "jj"
+  db_name                = var.postgres_dbname
+  username               = var.postgres_username
   password               = var.postgres_password
   skip_final_snapshot    = true
   multi_az               = true

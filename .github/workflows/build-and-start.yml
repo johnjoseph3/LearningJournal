@@ -12,6 +12,7 @@ jobs:
       AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
       AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
 
     steps:
       - name: Checkout repository
@@ -54,6 +55,11 @@ jobs:
             tar -xzf ~/nextjs-app.tar.gz -C ~/nextjs-app
             cd ~/nextjs-app
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            export AUTH_GOOGLE_ID=${{ secrets.AUTH_GOOGLE_ID }}
+            export AUTH_GOOGLE_SECRET=${{ secrets.AUTH_GOOGLE_SECRET }}
+            export AUTH_SECRET=${{ secrets.AUTH_SECRET }}
+            export AUTH_TRUST_HOST=true
             npm install --production
             npx prisma migrate deploy
             pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start

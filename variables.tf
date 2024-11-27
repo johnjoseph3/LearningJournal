@@ -8,10 +8,20 @@ variable "ec2_instance_type" {
   default = "t2.micro"
 }
 
+variable "postgres_username" {
+  type    = string
+  default = "lj"
+}
+
 variable "postgres_password" {
   type      = string
   sensitive = true
   default   = "your_postgres_password"
+}
+
+variable "postgres_dbname" {
+  type    = string
+  default = "learning_journal"
 }
 
 variable "route53_zone_id" {
