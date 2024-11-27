@@ -53,6 +53,7 @@ jobs:
             mkdir -p ~/nextjs-app
             tar -xzf ~/nextjs-app.tar.gz -C ~/nextjs-app
             cd ~/nextjs-app
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
             npm install --production
             npx prisma migrate deploy
             pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start
