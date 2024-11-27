@@ -50,6 +50,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           
           script: |
+            mkdir -p ~/nextjs-app
             tar -xzf ~/nextjs-app.tar.gz -C ~/nextjs-app
             cd ~/nextjs-app
             npm install --production
