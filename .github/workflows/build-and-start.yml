@@ -32,14 +32,15 @@ jobs:
       - name: Archive production artifacts
         run: tar -czf nextjs-app.tar.gz .next public package.json node_modules
 
-      - name: Copy files to EC2
-        uses: appleboy/scp-action@v0.1.0
+      - name: Copy files to EC2 using rsync
+        uses: burnett01/rsync-deployments@5.1
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "nextjs-app.tar.gz"
-          target: "~/nextjs-app.tar.gz"
+          switches: -avzr --delete
+          path: nextjs-app.tar.gz
+          remote_path: ~/nextjs-app.tar.gz
+          remote_host: ${{ secrets.EC2_HOST }}
+          remote_user: ${{ secrets.EC2_USER }}
+          remote_key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.0
