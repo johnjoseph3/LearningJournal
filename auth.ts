@@ -7,6 +7,20 @@ import type { NextAuthConfig } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/prisma/prisma.ts"
 
+
+console.log("HELLLOE")
+console.log("HELLLOE")
+console.log("HELLLOE")
+console.log("HELLLOE")
+console.log("NODE_ENV", process.env.NODE_ENV)
+console.log("AUTH_GOOGLE_ID", process.env.AUTH_GOOGLE_ID)
+console.log("AUTH_GOOGLE_SECRET", process.env.AUTH_GOOGLE_SECRET)
+console.log("AUTH_SECRET", process.env.AUTH_SECRET)
+console.log("HELLLOE")
+console.log("HELLLOE")
+console.log("HELLLOE")
+
+
 const config = {
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: PrismaAdapter(prisma),
