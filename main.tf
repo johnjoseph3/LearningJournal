@@ -209,7 +209,7 @@ resource "aws_instance" "lj" {
               npm install -g pm2
               EOF_USER
 
-              # Nginx configuration
+              # Initial Nginx configuration (HTTP only)
               cat <<EOT | sudo tee /etc/nginx/conf.d/nextjs-app.conf
               server {
                 listen 80;
@@ -219,11 +219,26 @@ resource "aws_instance" "lj" {
                   proxy_pass http://127.0.0.1:3000;
                 }
               }
+              EOT
 
-              # Obtain SSL certificate from Let's Encrypt
+              sudo nginx -t
+              sudo systemctl restart nginx
+
+              # Obtain SSL certificate from Let's Encrypt using standalone mode
               sudo systemctl stop nginx
-              sudo certbot --nginx -d share-learn.com --non-interactive --agree-tos --email ${var.certbot_email}
+              sudo certbot certonly --standalone -d share-learn.com --non-interactive --agree-tos --email ${var.certbot_email}
               sudo systemctl start nginx
+
+              # Update Nginx configuration to use SSL
+              cat <<EOT | sudo tee /etc/nginx/conf.d/nextjs-app.conf
+              server {
+                listen 80;
+                server_name share-learn.com;
+
+                location / {
+                  proxy_pass http://127.0.0.1:3000;
+                }
+              }
 
               server {
                 listen 443 ssl;
