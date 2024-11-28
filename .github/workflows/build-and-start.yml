@@ -64,5 +64,6 @@ jobs:
             export AUTH_TRUST_HOST=true
             npm install --production
             npx prisma migrate deploy
-            pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start
+            pm2 delete nextjs-app || true
+            pm2 start npm --name "nextjs-app" -- start
             sudo systemctl restart nginx
