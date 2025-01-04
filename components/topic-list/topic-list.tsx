@@ -21,7 +21,7 @@ export default function TopicList({ topics }: TopicListProps) {
         const topics = groupedTopics[keyName]
         return (
           <div key={i} className="mb-4">
-            <Heading size="h4" className="font-normal">
+            <Heading size="h3" className="font-normal mb-2">
               {keyName}
             </Heading>
             {topics.map((topic: any) => {
