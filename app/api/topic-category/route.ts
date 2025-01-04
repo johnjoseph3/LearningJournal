@@ -8,7 +8,7 @@ export const GET = auth(async (req) => {
     const topicCategories = await prisma.topicCategory.findMany({
       where: {
         userId: userId
-      }
+      },
     })
 
     return Response.json({ topicCategories })
