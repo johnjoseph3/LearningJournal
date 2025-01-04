@@ -6,6 +6,7 @@ import CustomLink from "@/components/custom-link"
 import { Heading } from "@/components/ui/heading"
 import TopicList from "@/components/topic-list/topic-list"
 import { getFetcher } from "@/app/api/fetchers/get"
+import PageHeader from "@/components/page-header/page-header"
 
 export default function Page() {
   const { data, error, isLoading } = useSWR("/api/topic", getFetcher)
@@ -17,16 +18,14 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex justify-between">
-        <Heading size="h1" className="mb-10">
-          Topics
-        </Heading>
-        <div className="flex items-center">
+      <PageHeader
+        title="Topics"
+        rightChild={
           <CustomLink href="/topics/create" className="underline block">
             New
           </CustomLink>
-        </div>
-      </div>
+        }
+      />
       <TopicList topics={data?.topics || []} />
     </>
   )

@@ -2,9 +2,9 @@
 
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
-import { Heading } from "@/components/ui/heading"
 import { getFetcher } from "@/app/api/fetchers/get"
 import TopicList from "@/components/topic-list/topic-list"
+import PageHeader from "@/components/page-header/page-header"
 
 export default function Index() {
   const { data, error, isLoading } = useSWR("/api/topic", getFetcher)
@@ -16,7 +16,7 @@ export default function Index() {
 
   return (
     <div>
-      <Heading size="h3">Your topics</Heading>
+      <PageHeader title="Dashboard" />
       <TopicList topics={data?.topics || []} />
     </div>
   )

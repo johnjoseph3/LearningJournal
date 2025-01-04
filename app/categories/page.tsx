@@ -3,9 +3,9 @@
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import CustomLink from "@/components/custom-link"
-import { Heading } from "@/components/ui/heading"
 import { TopicCategory } from "@prisma/client"
 import { getFetcher } from "@/app/api/fetchers/get"
+import PageHeader from "@/components/page-header/page-header"
 
 export default function Page() {
   const { data, error, isLoading } = useSWR("/api/topic-category", getFetcher)
@@ -17,11 +17,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex justify-between">
-        <Heading size="h1" className="mb-10">
-          Categories
-        </Heading>
-      </div>
+      <PageHeader title="Categories" />
       {data.topicCategories.map((category: TopicCategory) => {
         return (
           <CustomLink
