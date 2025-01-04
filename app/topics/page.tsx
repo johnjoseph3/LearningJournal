@@ -73,6 +73,14 @@ export default function Page() {
           </div>
         )
       })}
+      {!data.topics.length ? (
+        <>
+          <span className="text-gray-500">No topics found </span>
+          <CustomLink href="/topics/create" className="underline">
+            create a new one
+          </CustomLink>
+        </>
+      ) : null}
     </>
   )
 }

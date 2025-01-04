@@ -45,6 +45,14 @@ export default function Page() {
           </CustomLink>
         )
       })}
+      {!data.topicCategories.length ? (
+        <>
+          <span className="text-gray-500">No categories found </span>
+          <CustomLink href="/topics/create" className="underline">
+            create a new topic and category
+          </CustomLink>
+        </>
+      ) : null}
     </>
   )
 }

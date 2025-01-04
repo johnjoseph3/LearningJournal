@@ -15,10 +15,6 @@ export const GET = auth(async (req, context) => {
       }
     })
 
-    if (!topics.length) {
-      return Response.json({ message: "No topics available" }, { status: 500 })
-    }
-
     return Response.json({ topics })
   }
 
