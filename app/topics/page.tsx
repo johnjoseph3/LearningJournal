@@ -4,22 +4,10 @@ import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import CustomLink from "@/components/custom-link"
 import { Heading } from "@/components/ui/heading"
-
-const fetcher = async (url: string) => {
-  const res = await fetch(url)
-
-  if (!res.ok) {
-    const error: any = new Error("An error occurred while fetching the data.")
-    error.info = await res.json()
-    error.status = res.status
-    throw error
-  }
-
-  return res.json()
-}
+import { getFetcher } from "@/app/api/fetchers/get"
 
 export default function Page() {
-  const { data, error, isLoading } = useSWR("/api/topic", fetcher)
+  const { data, error, isLoading } = useSWR("/api/topic", getFetcher)
 
   if (error)
     return error?.info?.message || "An error occurred while fetching the data."
