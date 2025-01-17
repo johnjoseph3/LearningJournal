@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import EntriesEditor, { EntryData } from "@/components/page/entries-editor.tsx"
 import Skeleton from "@/components/skeleton"
 import { Label } from "@/components/ui/label"
@@ -59,6 +59,33 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     editable: true,
     visible: false
   })
+
+  useEffect(() => {
+    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+      if (currentlyEditingId) {
+        const draft = content.find((item) => item.id === currentlyEditingId)
+        if (draft) {
+          const res = await fetch("/api/draft/delete", {
+            method: "POST",
+            body: JSON.stringify({ draft })
+          })
+
+          if (!res.ok) {
+            toast("Could not delete entry")
+            return
+          }
+        }
+        event.preventDefault()
+        event.returnValue = "" // This line is necessary for some browsers to show the confirmation dialog
+      }
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [currentlyEditingId, content])
 
   if (error)
     return error?.info?.message || "An error occurred while fetching the data."
