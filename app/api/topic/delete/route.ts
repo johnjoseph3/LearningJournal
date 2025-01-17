@@ -21,19 +21,22 @@ export const POST = auth(async (req) => {
       }
     })
 
-    if (categoryTopics.length === 1) {
+    const lastEntry = categoryTopics.length === 1
+
+    await prisma.topic.delete({
+      where: {
+        id: body.id
+      }
+    })
+
+    if (lastEntry) {
       await prisma.topicCategory.delete({
         where: {
           id: topic.categoryId
         }
       })
-    } else {
-      await prisma.topic.delete({
-        where: {
-          id: body.id
-        }
-      })
     }
+    
     return Response.json("Successfully deleted")
   }
 
