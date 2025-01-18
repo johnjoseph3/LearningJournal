@@ -3,11 +3,10 @@ import {
   DeleteObjectCommand,
   PutObjectCommand
 } from "@aws-sdk/client-s3"
-import { PrismaClient } from "@prisma/client"
+import { loggerService } from "@/app/services/logger.service"
 
 class AWSService {
   private s3Client: S3Client
-  private prisma: PrismaClient
   private region: string
 
   constructor() {
@@ -19,8 +18,6 @@ class AWSService {
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
       }
     })
-
-    this.prisma = new PrismaClient()
   }
 
   async deleteS3Image(url: string): Promise<void> {
@@ -33,7 +30,13 @@ class AWSService {
         Key: key
       }
 
-      await this.s3Client.send(new DeleteObjectCommand(deleteParams))
+      try {
+        await this.s3Client.send(new DeleteObjectCommand(deleteParams))
+      } catch (err: any) {
+        const message = err.message || "Error deleting image from S3"
+        loggerService.logError(message)
+        throw new Error(message)
+      }
     }
   }
 
@@ -54,8 +57,10 @@ class AWSService {
       await this.s3Client.send(new PutObjectCommand(uploadParams))
       const publicUrl = `https://${bucket}.s3.${this.region}.amazonaws.com/${key}`
       return publicUrl
-    } catch (err) {
-      throw new Error("Error uploading image to S3")
+    } catch (err: any) {
+      const message = err.message || "Error uploading image to S3"
+      loggerService.logError(message)
+      throw new Error(message)
     }
   }
 }
