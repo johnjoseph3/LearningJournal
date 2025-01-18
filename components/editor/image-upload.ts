@@ -31,7 +31,10 @@ const onUpload = (file: File) => {
           )
           // Unknown error
         } else {
-          throw new Error("Error uploading image. Please try again.")
+          const errorResponse = await res.json()
+          const errorMessage =
+            errorResponse.message || "Error uploading image. Please try again."
+          throw new Error(errorMessage)
         }
       }),
       {

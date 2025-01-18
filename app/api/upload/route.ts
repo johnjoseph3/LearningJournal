@@ -1,10 +1,6 @@
 import { auth } from "@/auth.ts"
-
-// why isn't alias working?
-// import { awsService } from "@/services/aws.service.ts"
-import { awsService } from "../../services/aws.service.ts"
-
-const awsRegion = process.env.AWS_REGION || "us-east-1"
+import { awsService } from "@/app/services/aws.service.ts"
+import { loggerService } from "@/app/services/logger.service.ts"
 
 export const POST = auth(async (req, context) => {
   if (req.auth) {
@@ -37,8 +33,10 @@ export const POST = auth(async (req, context) => {
         fileType
       )
       return new Response(JSON.stringify({ url }), { status: 200 })
-    } catch (err) {
-      return new Response(JSON.stringify({ message: "Error uploading file" }), {
+    } catch (err: any) {
+      const message = err.message || "Error uploading image to S3"
+      loggerService.logError(message)
+      return new Response(JSON.stringify({ message }), {
         status: 500
       })
     }
