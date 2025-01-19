@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useSortable } from "@dnd-kit/sortable"
@@ -32,9 +32,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
 interface Item {
@@ -60,6 +58,18 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   children,
   entry
 }) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
+  const handleDialogTriggerClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleCancelClick = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    setIsDeleteDialogOpen(false)
+  }
+
   const uniqueId = id.id
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
@@ -126,31 +136,45 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
                 <DropdownMenuContent align="end" forceMount className="min-w-0">
                   <DropdownMenuItem className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <Dialog>
+                      <Dialog
+                        open={isDeleteDialogOpen}
+                        onOpenChange={setIsDeleteDialogOpen}
+                      >
                         <Tooltip>
-                          <DialogTrigger>
+                          <DialogTrigger asChild>
                             <TooltipTrigger asChild>
-                              <Cross1Icon className="text-destructive" />
+                              <div>
+                                <Cross1Icon
+                                  className="text-destructive cursor-pointer"
+                                  onClick={handleDialogTriggerClick}
+                                />
+                              </div>
                             </TooltipTrigger>
-                            <TooltipContent side="left">
-                              <p>Delete</p>
-                            </TooltipContent>
                           </DialogTrigger>
                         </Tooltip>
-                        <DialogContent>
+                        <DialogContent onClick={(e) => e.stopPropagation()}>
                           <DialogHeader>
-                            <DialogTitle>
+                            <DialogTitle className="mb-4">
                               Are you sure you want to delete this entry?
                             </DialogTitle>
                             <DialogFooter>
                               <DialogClose asChild>
                                 <Button
                                   variant="destructive"
-                                  onClick={handleDelete}
+                                  onClick={() => {
+                                    handleDelete()
+                                    setIsDeleteDialogOpen(false)
+                                  }}
                                 >
                                   Delete
                                 </Button>
                               </DialogClose>
+                              <Button
+                                variant="secondary"
+                                onClick={handleCancelClick}
+                              >
+                                Cancel
+                              </Button>
                             </DialogFooter>
                           </DialogHeader>
                         </DialogContent>
