@@ -41,11 +41,15 @@ class AWSService {
   }
 
   async uploadS3Image(
+    userId: string,
     bucket: string,
-    key: string,
+    fileName: string,
     body: Buffer,
-    contentType: string
+    contentType: string,
   ): Promise<string> {
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, "")
+    const uniqueFileName = `${timestamp}-${fileName}`
+    const key = `${userId}/images/${uniqueFileName}`
     const uploadParams = {
       Bucket: bucket,
       Key: key,

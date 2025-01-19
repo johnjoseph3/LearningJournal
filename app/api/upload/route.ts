@@ -27,6 +27,7 @@ export const POST = auth(async (req, context) => {
 
     try {
       const url = await awsService.uploadS3Image(
+        req.auth.user?.id as string,
         process.env.AWS_S3_IMAGE_BUCKET!,
         fileName,
         fileBuffer,
