@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider.tsx"
 import Footer from "@/components/footer.tsx"
 import Header from "@/components/header.tsx"
 import { Toaster } from "@/components/ui/sonner.tsx"
+import { auth } from "auth"
+import { Heading } from "@/components/ui/heading"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,7 +15,11 @@ export const metadata: Metadata = {
   description: "Track your learning"
 }
 
-export default function RootLayout({ children }: React.PropsWithChildren) {
+export default async function RootLayout({
+  children
+}: React.PropsWithChildren) {
+  const session = await auth()
+
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
@@ -26,7 +32,14 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
           <div className="flex h-full min-h-screen w-full flex-col justify-between">
             <Header />
             <main className="mx-auto w-full max-w-3xl flex-auto px-4 py-4 sm:px-6 md:py-6">
-              {children}
+              {!session?.user ? (
+                <>
+                  <Heading size="h1">Welcome</Heading>
+                  <p>Sign in to track your learning</p>
+                </>
+              ) : (
+                children
+              )}
               <Toaster />
             </main>
             <Footer />
