@@ -5,6 +5,7 @@ import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import { Entry } from "@prisma/client"
 import { generateHTML } from "@tiptap/core"
+import Image from "@tiptap/extension-image"
 import Document from "@tiptap/extension-document"
 import Paragraph from "@tiptap/extension-paragraph"
 import Text from "@tiptap/extension-text"
@@ -65,7 +66,8 @@ export default function Page({
           TaskItem,
           OrderedList,
           BlockQuote,
-          CodeBlock
+          CodeBlock,
+          Image
         ])}</div>`
         return accum + " " + content
       }, "")
