@@ -74,7 +74,6 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
 
-  const sortable = !entry.blank
   const editable = entry.editable
   const draft = entry.draft
 
@@ -111,21 +110,19 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
         </div>
 
         <div className="flex justify-center items-center gap-4 min-w-10 pr-2 opacity-30 hover:opacity-100">
-          {sortable ? (
-            <button
-              {...attributes}
-              {...listeners}
-              className={` ${isCursorGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
-              aria-describedby={`DndContext-${uniqueId}`}
-            >
-              <svg viewBox="0 0 20 20" width="15">
-                <path
-                  d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </button>
-          ) : null}
+          <button
+            {...attributes}
+            {...listeners}
+            className={` ${isCursorGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
+            aria-describedby={`DndContext-${uniqueId}`}
+          >
+            <svg viewBox="0 0 20 20" width="15">
+              <path
+                d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </button>
 
           <div className="cursor-pointer relative ">
             <TooltipProvider>

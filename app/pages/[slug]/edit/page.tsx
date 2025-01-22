@@ -52,40 +52,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     number | string | null
   >(null)
   const [isEditingName, setIsEditingName] = useState(false)
-  const [blankEntry, setBlankEntry] = useState({
-    id: uuidv4(),
-    content: undefined,
-    blank: true,
-    editable: true,
-    visible: false
-  })
-
-  useEffect(() => {
-    const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-      if (currentlyEditingId) {
-        const draft = content.find((item) => item.id === currentlyEditingId)
-        if (draft) {
-          const res = await fetch("/api/draft/delete", {
-            method: "POST",
-            body: JSON.stringify({ draft })
-          })
-
-          if (!res.ok) {
-            toast("Could not delete entry")
-            return
-          }
-        }
-        event.preventDefault()
-        event.returnValue = "" // This line is necessary for some browsers to show the confirmation dialog
-      }
-    }
-
-    window.addEventListener("beforeunload", handleBeforeUnload)
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload)
-    }
-  }, [currentlyEditingId, content])
 
   if (error)
     return error?.info?.message || "An error occurred while fetching the data."
@@ -111,7 +77,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   async function handleDragEnd(newOrderedEntries: EntryData[]) {
     const res = await fetch("/api/entry/reflow", {
       method: "POST",
-      body: JSON.stringify(newOrderedEntries.filter((entry) => !entry.blank))
+      body: JSON.stringify(newOrderedEntries)
     })
 
     if (!res.ok) {
@@ -133,87 +99,39 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
       return
     }
 
-    if (entry.blank) {
-      const body = {
-        pageId: data.page.id,
-        content: editedContent.content,
-        order: data.page.entries.length + 1
-      }
-
-      const res = await fetch("/api/entry/create", {
-        method: "POST",
-        body: JSON.stringify(body)
-      })
-
-      if (!res.ok) {
-        toast("Could not create entry")
-        return
-      }
-
-      toast("Entry has been created")
-
-      mutate({
-        page: {
-          ...data.page,
-          entries: [
-            ...data.page.entries,
-            {
-              content
-            }
-          ]
-        }
-      })
-    } else {
-      const body = {
-        id: entry.id,
-        content: editedContent.content
-      }
-
-      const res = await fetch("/api/entry/update", {
-        method: "POST",
-        body: JSON.stringify(body)
-      })
-
-      if (!res.ok) {
-        toast("Could not update entry")
-        return
-      }
-
-      toast("Entry has been updated")
-
-      mutate({
-        page: {
-          ...data.page,
-          entries: [
-            ...data.page.entries,
-            {
-              content
-            }
-          ]
-        }
-      })
+    const body = {
+      id: entry.id,
+      content: editedContent.content
     }
 
-    setBlankEntry({
-      id: uuidv4(),
-      content: undefined,
-      blank: true,
-      editable: true,
-      visible: false
+    const res = await fetch("/api/entry/update", {
+      method: "POST",
+      body: JSON.stringify(body)
     })
+
+    if (!res.ok) {
+      toast("Could not update entry")
+      return
+    }
+
+    toast("Entry has been updated")
+
+    mutate({
+      page: {
+        ...data.page,
+        entries: [
+          ...data.page.entries,
+          {
+            content
+          }
+        ]
+      }
+    })
+
     setCurrentlyEditingId(null)
   }
 
   async function handleEntryDelete(entry: EntryData) {
-    if (entry.blank) {
-      setBlankEntry({
-        ...blankEntry,
-        visible: false
-      })
-      setCurrentlyEditingId(null)
-      return
-    }
-
     const id = entry.id
 
     const res = await fetch("/api/entry/delete", {
@@ -319,10 +237,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
 
   const entries = [...data.page.entries].map((entry) => {
     // TODO this up. consider a different strategy for storing/attaching this metadata
-    if (!entry.blank) {
-      entry.visible = true
-    }
-
     if (currentlyEditingId === entry.id) {
       entry.editable = true
     } else {
@@ -331,8 +245,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
 
     return entry
   })
-
-  console.log("entries", entries)
 
   async function handleTogglePublic(isPublic: boolean) {
     const body = {

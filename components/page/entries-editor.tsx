@@ -30,8 +30,6 @@ import {
 
 export interface EntryData extends Entry {
   editable: boolean
-  blank: boolean
-  visible: boolean
 }
 
 export default function EntriesEditor(props: {
@@ -69,14 +67,6 @@ export default function EntriesEditor(props: {
     const newIndex = entries.findIndex((item) => item.id === over.id)
     const newOrder = arrayMove(entries, oldIndex, newIndex)
 
-    const activeEntry = entries.find((entry) => entry.id === active.id)
-    const overEntry = entries.find((entry) => entry.id === over.id)
-
-    if (activeEntry?.blank || overEntry?.blank) {
-      toast("save entry before reordering")
-      return
-    }
-
     if (active.id !== over.id) {
       onDragEnd(newOrder)
     }
@@ -94,7 +84,7 @@ export default function EntriesEditor(props: {
           {entries.map((entry) => {
             const content = entry?.content as JSONContent
 
-            return entry.visible ? (
+            return (
               <SortableLinks
                 key={entry.id}
                 id={entry}
@@ -112,7 +102,7 @@ export default function EntriesEditor(props: {
                   id={entry.id}
                 />
               </SortableLinks>
-            ) : null
+            )
           })}
         </SortableContext>
       </DndContext>
