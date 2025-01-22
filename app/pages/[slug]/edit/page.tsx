@@ -48,9 +48,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   const [content, setContent] = useState<
     { id: number | string; content: JSONContent }[]
   >([])
-  const [currentlyEditingId, setCurrentlyEditingId] = useState<
-    number | string | null
-  >(null)
+
   const [isEditingName, setIsEditingName] = useState(false)
 
   if (error)
@@ -61,18 +59,18 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   const handleChange = (id: number, val: JSONContent) => {
     if (!content?.find((item) => item.id === id)) {
       setContent([...content, { id, content: val }])
-      return
+    } else {
+      setContent((prevItems) => {
+        return prevItems?.map((item) => {
+          if (item.id === id) {
+            item.content = val
+          }
+          return item
+        })
+      })
     }
 
-    setContent((prevItems) => {
-      return prevItems?.map((item) => {
-        if (item.id === id) {
-          item.content = val
-        }
-        return item
-      })
-    })
-    handleSave(id)
+    handleSave(id, val)
   }
 
   async function handleDragEnd(newOrderedEntries: EntryData[]) {
@@ -94,15 +92,10 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     })
   }
 
-  const handleSave = async (id: number) => {
-    const editedContent = content.find((item) => item.id === id)
-    if (!editedContent) {
-      return
-    }
-
+  const handleSave = async (id: number, content: JSONContent) => {
     const body = {
       id,
-      content: editedContent.content
+      content
     }
 
     const res = await fetch("/api/entry/update", {
@@ -114,8 +107,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
       toast("Could not update entry")
       return
     }
-
-    setCurrentlyEditingId(null)
   }
 
   async function handleEntryDelete(entry: EntryData) {
@@ -143,10 +134,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
         entries: filtered
       }
     })
-  }
-
-  async function handleEdit(entry: EntryData) {
-    setCurrentlyEditingId(entry.id)
   }
 
   async function handleDraftToggle(entry: EntryData) {
@@ -207,7 +194,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
 
     // TODO - type entry
     const resBody: any = await res.json()
-    setCurrentlyEditingId(resBody.entry.id)
     mutate({
       page: {
         ...data.page,
@@ -215,11 +201,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
       }
     })
   }
-
-  const entries = [...data.page.entries].map((entry) => {
-    entry.editable = true
-    return entry
-  })
 
   async function handleTogglePublic(isPublic: boolean) {
     const body = {
@@ -297,6 +278,11 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
   function handleTopicNameBlur() {
     setIsEditingName(false)
   }
+
+  const entries = [...data.page.entries].map((entry) => {
+    entry.editable = true
+    return entry
+  })
 
   return (
     <>
