@@ -282,18 +282,42 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     })
   }
 
-  function handleNewEntry() {
-    setBlankEntry({
-      ...blankEntry,
-      visible: true
+  async function handleNewEntry() {
+    const content = null
+    const body = {
+      pageId: data.page.id,
+      content,
+      order: data.page.entries.length + 1
+    }
+
+    const res = await fetch("/api/entry/create", {
+      method: "POST",
+      body: JSON.stringify(body)
     })
-    setCurrentlyEditingId(blankEntry.id)
+
+    if (!res.ok) {
+      toast("Could not create entry")
+      return
+    }
+
+    // TODO - type entry
+    const resBody: any = await res.json()
+    setCurrentlyEditingId(resBody.entry.id)
+    mutate({
+      page: {
+        ...data.page,
+        entries: [
+          ...data.page.entries,
+          {
+            ...resBody.entry,
+            editable: true
+          }
+        ]
+      }
+    })
   }
 
-  const entries = [
-    ...data.page.entries,
-    { ...blankEntry, order: data.page.entries.length + 1 }
-  ].map((entry) => {
+  const entries = [...data.page.entries].map((entry) => {
     // TODO this up. consider a different strategy for storing/attaching this metadata
     if (!entry.blank) {
       entry.visible = true
@@ -307,6 +331,8 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
 
     return entry
   })
+
+  console.log("entries", entries)
 
   async function handleTogglePublic(isPublic: boolean) {
     const body = {
