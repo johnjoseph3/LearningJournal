@@ -37,21 +37,11 @@ export default function EntriesEditor(props: {
   onChange: (id: number, val: JSONContent) => void
   onDragEnd: (entries: EntryData[]) => void
   onDelete: (entry: EntryData) => void
-  onSave: (entry: EntryData) => void
-  onEdit: (entry: EntryData) => void
   onDraftToggle: (entry: EntryData) => void
   onNewEntry: () => void
 }) {
-  const {
-    entries,
-    onChange,
-    onSave,
-    onEdit,
-    onDraftToggle,
-    onDragEnd,
-    onDelete,
-    onNewEntry
-  } = props
+  const { entries, onChange, onDraftToggle, onDragEnd, onDelete, onNewEntry } =
+    props
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -83,19 +73,15 @@ export default function EntriesEditor(props: {
         <SortableContext items={entries} strategy={verticalListSortingStrategy}>
           {entries.map((entry) => {
             const content = entry?.content as JSONContent
-
             return (
               <SortableLinks
                 key={entry.id}
                 id={entry}
                 onDelete={onDelete}
-                onSave={onSave}
-                onEdit={onEdit}
                 onDraftToggle={onDraftToggle}
                 entry={entry}
               >
                 <Editor
-                  key={entry.id}
                   initialValue={content}
                   onChange={onChange}
                   editable={entry?.editable}

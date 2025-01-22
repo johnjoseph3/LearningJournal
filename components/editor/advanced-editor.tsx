@@ -47,6 +47,7 @@ const Editor = ({
 
   const debouncedUpdates = useDebouncedCallback(
     async (props: { editor: EditorInstance; transaction: any }) => {
+      console.log("Debounced update")
       onChange(id, props.editor.getJSON())
     },
     500

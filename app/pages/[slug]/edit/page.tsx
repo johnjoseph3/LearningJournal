@@ -72,6 +72,7 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
         return item
       })
     })
+    handleSave(id)
   }
 
   async function handleDragEnd(newOrderedEntries: EntryData[]) {
@@ -93,14 +94,14 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     })
   }
 
-  const handleSave = async (entry: EntryData) => {
-    const editedContent = content.find((item) => item.id === entry.id)
+  const handleSave = async (id: number) => {
+    const editedContent = content.find((item) => item.id === id)
     if (!editedContent) {
       return
     }
 
     const body = {
-      id: entry.id,
+      id,
       content: editedContent.content
     }
 
@@ -113,20 +114,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
       toast("Could not update entry")
       return
     }
-
-    toast("Entry has been updated")
-
-    mutate({
-      page: {
-        ...data.page,
-        entries: [
-          ...data.page.entries,
-          {
-            content
-          }
-        ]
-      }
-    })
 
     setCurrentlyEditingId(null)
   }
@@ -224,25 +211,13 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
     mutate({
       page: {
         ...data.page,
-        entries: [
-          ...data.page.entries,
-          {
-            ...resBody.entry,
-            editable: true
-          }
-        ]
+        entries: [...data.page.entries, resBody.entry]
       }
     })
   }
 
   const entries = [...data.page.entries].map((entry) => {
-    // TODO this up. consider a different strategy for storing/attaching this metadata
-    if (currentlyEditingId === entry.id) {
-      entry.editable = true
-    } else {
-      entry.editable = false
-    }
-
+    entry.editable = true
     return entry
   })
 
@@ -387,8 +362,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
       <EntriesEditor
         entries={entries}
         onChange={handleChange}
-        onSave={handleSave}
-        onEdit={handleEdit}
         onDraftToggle={handleDraftToggle}
         onDragEnd={handleDragEnd}
         onDelete={handleEntryDelete}

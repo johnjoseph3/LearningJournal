@@ -42,8 +42,6 @@ interface Item {
 interface SortableLinkCardProps {
   id: Item
   onDelete: (entry: EntryData) => void
-  onSave: (entry: EntryData) => void
-  onEdit: (entry: EntryData) => void
   onDraftToggle: (entry: EntryData) => void
   children: any
   entry: EntryData
@@ -51,9 +49,7 @@ interface SortableLinkCardProps {
 
 const SortableLinks: FC<SortableLinkCardProps> = ({
   id,
-  onSave,
   onDelete,
-  onEdit,
   onDraftToggle,
   children,
   entry
@@ -74,7 +70,6 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: uniqueId })
 
-  const editable = entry.editable
   const draft = entry.draft
 
   const style = {
@@ -86,14 +81,6 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
     onDelete(entry)
   }
 
-  const handleClick = () => {
-    onSave(entry)
-  }
-
-  const handleEdit = () => {
-    onEdit(entry)
-  }
-
   const handleDraftToggle = () => {
     onDraftToggle(entry)
   }
@@ -102,9 +89,7 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
-      <Card
-        className={`relative flex justify-between gap-5 group  ${editable ? "border-slate-400" : null}`}
-      >
+      <Card className={"relative flex justify-between gap-5 group"}>
         <div className="min-w-0" style={{ maxWidth: "75%" }}>
           {children}
         </div>
@@ -177,32 +162,6 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
                         </DialogContent>
                       </Dialog>
                     </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Tooltip>
-                      <TooltipTrigger
-                        asChild
-                        className="text-save cursor-pointer"
-                      >
-                        <CheckIcon onClick={handleClick} />
-                      </TooltipTrigger>
-                      <TooltipContent side="left">
-                        <p>Save</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Tooltip>
-                      <TooltipTrigger
-                        asChild
-                        className="text-save cursor-pointer"
-                      >
-                        <Pencil1Icon onClick={handleEdit} />
-                      </TooltipTrigger>
-                      <TooltipContent side="left">
-                        <p>Edit</p>
-                      </TooltipContent>
-                    </Tooltip>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Tooltip>
