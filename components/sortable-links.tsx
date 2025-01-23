@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/dialog"
 import {
   Cross1Icon,
-  CheckIcon,
-  Pencil1Icon,
   FilePlusIcon,
   FileMinusIcon,
   DotsHorizontalIcon
@@ -111,7 +109,7 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
 
           <div className="cursor-pointer relative ">
             <TooltipProvider>
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <DotsHorizontalIcon />
                 </DropdownMenuTrigger>
@@ -134,6 +132,7 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
                             </TooltipTrigger>
                           </DialogTrigger>
                         </Tooltip>
+
                         <DialogContent onClick={(e) => e.stopPropagation()}>
                           <DialogHeader>
                             <DialogTitle className="mb-4">
@@ -143,8 +142,8 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
                               <DialogClose asChild>
                                 <Button
                                   variant="destructive"
-                                  onClick={() => {
-                                    handleDelete()
+                                  onClick={async (event) => {
+                                    await handleDelete()
                                     setIsDeleteDialogOpen(false)
                                   }}
                                 >
