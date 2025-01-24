@@ -8,6 +8,7 @@ import { generateHTML } from "@tiptap/core"
 import { Heading as FontHeading } from "@/components/ui/heading"
 import { defaultExtensions } from "@/components/editor/extensions"
 import { type JSONContent } from "novel"
+import dayjs from "dayjs"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -36,10 +37,17 @@ export default function Page({
   const htmlContent = useMemo(() => {
     if (data?.page?.entries.length) {
       const html = data.page.entries.reduce((accum: string, curr: Entry) => {
-        const content = `<div class="entry hover:bg-secondary rounded-md p-2">
-        <div>Created at ${curr.createdAt}</div>
-        <div>Updated at ${curr.updatedAt}</div>
-        ${generateHTML(curr.content as JSONContent, defaultExtensions)}</div>`
+        const formattedDate = dayjs(curr.createdAt).format(
+          "MM/DD/YYYY"
+        )
+        const content = `<div class="entry hover:bg-secondary rounded-md p-2 flex flex-col">
+          <div class="flex justify-end">
+            <div class="text-sm text-gray-500">Created on ${formattedDate}</div>
+          </div>
+          <div class="mt-2">
+            ${generateHTML(curr.content as JSONContent, defaultExtensions)}
+          </div>
+        </div>`
         return accum + " " + content
       }, "")
 
