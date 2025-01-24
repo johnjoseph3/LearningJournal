@@ -5,22 +5,8 @@ import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import { Entry } from "@prisma/client"
 import { generateHTML } from "@tiptap/core"
-import Image from "@tiptap/extension-image"
-import Document from "@tiptap/extension-document"
-import Paragraph from "@tiptap/extension-paragraph"
-import Text from "@tiptap/extension-text"
-import Bold from "@tiptap/extension-bold"
-import Heading from "@tiptap/extension-heading"
-import ListItem from "@tiptap/extension-list-item"
-import BulletList from "@tiptap/extension-bullet-list"
-import Link from "@tiptap/extension-link"
-import TaskList from "@tiptap/extension-task-list"
-import TaskItem from "@tiptap/extension-task-item"
-import OrderedList from "@tiptap/extension-ordered-list"
-import BlockQuote from "@tiptap/extension-blockquote"
-import CodeBlock from "@tiptap/extension-code-block"
 import { Heading as FontHeading } from "@/components/ui/heading"
-
+import { defaultExtensions } from "@/components/editor/extensions"
 import { type JSONContent } from "novel"
 
 const fetcher = async (url: string) => {
@@ -53,22 +39,7 @@ export default function Page({
         const content = `<div class="entry hover:bg-secondary rounded-md p-2">
         <div>Created at ${curr.createdAt}</div>
         <div>Updated at ${curr.updatedAt}</div>
-        ${generateHTML(curr.content as JSONContent, [
-          Document,
-          Paragraph,
-          Text,
-          Bold,
-          Heading,
-          ListItem,
-          BulletList,
-          Link,
-          TaskList,
-          TaskItem,
-          OrderedList,
-          BlockQuote,
-          CodeBlock,
-          Image
-        ])}</div>`
+        ${generateHTML(curr.content as JSONContent, defaultExtensions)}</div>`
         return accum + " " + content
       }, "")
 
