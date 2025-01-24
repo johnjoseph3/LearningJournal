@@ -87,8 +87,8 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} key={uniqueId}>
-      <Card className={"relative flex justify-between gap-5 group"}>
-        <div className="min-w-0" style={{ maxWidth: "75%" }}>
+      <Card className="relative flex justify-between gap-5 group">
+        <div className="w-full">
           {children}
         </div>
 
