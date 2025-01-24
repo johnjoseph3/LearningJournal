@@ -22,7 +22,6 @@ import {
 import { useRouter } from "next/navigation"
 import { Heading } from "@/components/ui/heading"
 import { X } from "lucide-react"
-import { DialogDescription } from "@radix-ui/react-dialog"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)

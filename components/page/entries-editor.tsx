@@ -5,7 +5,7 @@ import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
 import Editor from "@/components/editor/advanced-editor.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { toast } from "sonner"
+import { Plus } from "lucide-react"
 
 import {
   DndContext,
@@ -92,9 +92,9 @@ export default function EntriesEditor(props: {
           })}
         </SortableContext>
       </DndContext>
-      <Button onClick={onNewEntry} variant="ghost" className="mt-2">
-        New entry
-      </Button>
+      <div className="flex justify-end mt-4">
+        <Plus className="h-8 w-8 cursor-pointer" onClick={onNewEntry} />
+      </div>
     </div>
   )
 }
