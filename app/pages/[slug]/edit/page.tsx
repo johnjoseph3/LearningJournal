@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import EntriesEditor, { EntryData } from "@/components/page/entries-editor.tsx"
 import Skeleton from "@/components/skeleton"
 import { Label } from "@/components/ui/label"
@@ -8,7 +8,6 @@ import { Switch } from "@/components/ui/switch"
 import useSWR from "swr"
 import { type JSONContent } from "novel"
 import { toast } from "sonner"
-import { v4 as uuidv4 } from "uuid"
 import TopicNameInput from "@/components/topic/topic-name-input"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +21,8 @@ import {
 } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
 import { Heading } from "@/components/ui/heading"
+import { X } from "lucide-react"
+import { DialogDescription } from "@radix-ui/react-dialog"
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -303,8 +304,39 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
               {data?.page?.topic?.name}
             </Heading>
           )}
+        </div>
+
+        <div className="flex flex-col items-end justify-center">
+          <div className="mb-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <X className="h-6 w-6 cursor-pointer" />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Delete page</DialogTitle>
+                </DialogHeader>
+                <p>Are you sure you want to delete {data.page.topic.name}?</p>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="destructive" onClick={handleTopicDelete}>
+                      Delete
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="public"
+              checked={data.page.public}
+              onCheckedChange={handleTogglePublic}
+            />
+            <Label htmlFor="public">Public</Label>
+          </div>
           {data.page.public ? (
-            <div>
+            <div className="mt-2">
               <a
                 href={data.publicUrl}
                 className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -313,36 +345,6 @@ export default function EditEntries({ params }: { params: { slug: string } }) {
               </a>
             </div>
           ) : null}
-        </div>
-
-        <div className="flex flex-col">
-          <div className="flex items-center space-x-2 mb-2">
-            <Switch
-              id="public"
-              checked={data.page.public}
-              onCheckedChange={handleTogglePublic}
-            />
-            <Label htmlFor="public">Public</Label>
-          </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="destructive">Delete</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  Are you sure you want to delete {data.page.topic.name}?
-                </DialogTitle>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="destructive" onClick={handleTopicDelete}>
-                      Delete
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
       <EntriesEditor
