@@ -8,7 +8,9 @@ import {
   StarterKit,
   Placeholder,
   AIHighlight,
-  TiptapUnderline
+  TiptapUnderline,
+  Color,
+  TextStyle
 } from "novel/extensions"
 import { UploadImagesPlugin } from "novel/plugins"
 
@@ -115,5 +117,7 @@ export const defaultExtensions = [
   taskItem,
   horizontalRule,
   aiHighlight,
-  TiptapUnderline
+  TiptapUnderline,
+  Color,
+  TextStyle
 ]
