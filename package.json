@@ -11,7 +11,8 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "find app -name '*test.ts' | xargs node --import tsx --test"
   },
   "author": "John Joseph <johnjosephnc@gmail.com>",
   "dependencies": {
