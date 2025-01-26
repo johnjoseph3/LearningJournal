@@ -3,7 +3,7 @@ import {
   DeleteObjectCommand,
   PutObjectCommand
 } from "@aws-sdk/client-s3"
-import { loggerService } from "@/app/services/logger.service"
+import { loggerService } from "@/app/services/logger/logger.service"
 
 class AWSService {
   private s3Client: S3Client

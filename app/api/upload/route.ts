@@ -1,6 +1,6 @@
 import { auth } from "@/auth.ts"
-import { awsService } from "@/app/services/aws.service.ts"
-import { loggerService } from "@/app/services/logger.service.ts"
+import { awsService } from "@/app/services/aws/aws.service"
+import { loggerService } from "@/app/services/logger/logger.service"
 
 export const POST = auth(async (req, context) => {
   if (req.auth) {

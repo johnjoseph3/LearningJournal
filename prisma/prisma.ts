@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
-import { tipTapService } from "@/app/services/tiptap.service"
-import { awsService } from "@/app/services/aws.service"
+import { tipTapService } from "@/app/services/tiptap/tiptap.service"
+import { awsService } from "@/app/services/aws/aws.service"
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
