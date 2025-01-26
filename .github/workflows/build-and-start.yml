@@ -1,4 +1,4 @@
-name: Build and Deploy Next.js App
+name: Build and Deploy
 
 on:
   workflow_dispatch:
@@ -22,9 +22,22 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID }}
+          AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_IMAGE_BUCKET: ${{ secrets.AWS_S3_IMAGE_BUCKET }}
 
       - name: Build Next.js app
         run: npm run build
