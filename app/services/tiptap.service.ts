@@ -54,13 +54,6 @@ class TipTapService {
       await awsService.deleteS3Image(url)
     }
   }
-
-  async deleteDraft(json: any) {
-    const imageUrls = this.extractImageUrls(json)
-    for (const url of imageUrls) {
-      await awsService.deleteS3Image(url)
-    }
-  }
 }
 
 export const tipTapService = new TipTapService()
