@@ -71,7 +71,7 @@ const SortableLinks: FC<SortableLinkCardProps> = ({
   const draft = entry.draft
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition
   }
 

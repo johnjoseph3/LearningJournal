@@ -4,7 +4,6 @@ import { Entry } from "@prisma/client"
 import { type JSONContent } from "novel"
 import SortableLinks from "@/components/sortable-links"
 import Editor from "@/components/editor/advanced-editor.tsx"
-import { Button } from "@/components/ui/button.tsx"
 import { Plus } from "lucide-react"
 
 import {
