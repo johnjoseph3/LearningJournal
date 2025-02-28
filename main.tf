@@ -283,7 +283,7 @@ resource "aws_db_instance" "postgres" {
   username               = var.postgres_username
   password               = var.postgres_password
   skip_final_snapshot    = true
-  multi_az               = true
+  multi_az               = false
 }
 
 output "private_key" {
