@@ -46,7 +46,7 @@
     "clsx": "^2.0.0",
     "dayjs": "^1.11.13",
     "lucide-react": "^0.274.0",
-    "next": "latest",
+    "next": "^14.2.25",
     "next-auth": "beta",
     "next-themes": "^0.3.0",
     "novel": "^0.5.0",
