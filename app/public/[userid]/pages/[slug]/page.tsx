@@ -40,7 +40,7 @@ export default function Page({
         const formattedDate = dayjs(curr.createdAt).format(
           "MM/DD/YYYY"
         )
-        const content = `<div class="entry hover:bg-secondary rounded-md p-2 flex flex-col">
+        const content = `<div class="entry rounded-md p-2 flex flex-col">
           <div class="flex justify-end">
             <div class="text-sm text-gray-500">Created on ${formattedDate}</div>
           </div>
