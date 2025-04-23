@@ -78,7 +78,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE. See [LICENSE](LICENSE) for mor
 
 ## Acknowledgments
 
-- [Auth.js](https://authjs.dev/)
+- [NextAuth.js](https://github.com/nextauthjs/next-auth-example)
 - [dnd kit](https://dndkit.com/)
 - [Novel](https://novel.sh/)
 
