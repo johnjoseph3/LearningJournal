@@ -2,12 +2,9 @@
 
 <!-- PROJECT LOGO -->
 <br />
-<div align="center">
-  <!-- <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a> -->
 
-  <h3 align="center">Learning Journal</h3>
+<div align="center">
+  <img src="public/logo.png" alt="Learning Journal Logo" width="240">
 
   <p align="center">
     Keep your learning on track!
@@ -38,7 +35,6 @@
 
 Learning Journal was born from a desire for a tool that can track topic based learning progress and provide encouragment for continued learning.
 
-![Share Learn](public/ml.png)
 
 Basics:
 
