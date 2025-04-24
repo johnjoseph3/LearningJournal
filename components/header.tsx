@@ -8,7 +8,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-4 sm:px-6">
         <MainNav />
         <div className="flex">
-          <div className="mr-5">
+          <div className="mr-5 flex items-center">
             <UserButton />
           </div>
           <ModeToggle />
