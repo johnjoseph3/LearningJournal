@@ -64,14 +64,16 @@ export default function Page({
         <FontHeading size="h1" className="capitalize">
           {data.page.topic.name}
         </FontHeading>
-        <div>
-          <a
-            href={`/pages/${userid}/${slug}/edit`}
-            className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
-          >
-            Edit page
-          </a>
-        </div>
+        {data?.owner && (
+          <div>
+            <a
+              href={`/pages/${userid}/${slug}/edit`}
+              className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >
+              Edit page
+            </a>
+          </div>
+        )}
       </div>
       {htmlContent ? (
         <div
