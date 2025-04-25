@@ -15,6 +15,8 @@ function slugify(str: string) {
 
 export const POST = auth(async (req) => {
   if (req.auth) {
+    let newTopicCategoryCreated = false
+    let topicCategoryId = null
     try {
       const body = await req.json()
       const userId = req.auth.user?.id as string
@@ -33,6 +35,8 @@ export const POST = auth(async (req) => {
         topicCategory = await prisma.topicCategory.create({
           data: { name: newCategoryName, userId }
         })
+        newTopicCategoryCreated = true
+        topicCategoryId = topicCategory.id
       }
 
       if (!topicCategory) {
@@ -62,6 +66,13 @@ export const POST = auth(async (req) => {
         }
       })
     } catch (error: any) {
+      if (newTopicCategoryCreated && topicCategoryId) {
+        await prisma.topicCategory.delete({
+          where: {
+            id: topicCategoryId
+          }
+        })
+      }
       return Response.json(
         { message: error?.message || "Could not create topic" },
         { status: 500 }
