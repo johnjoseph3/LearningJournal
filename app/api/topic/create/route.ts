@@ -15,54 +15,58 @@ function slugify(str: string) {
 
 export const POST = auth(async (req) => {
   if (req.auth) {
-    const body = await req.json()
-    const userId = req.auth.user?.id as string
+    try {
+      const body = await req.json()
+      const userId = req.auth.user?.id as string
 
-    const { categoryId, newCategoryName, topicName, createNewCategory } = body
+      const { categoryId, newCategoryName, topicName, createNewCategory } = body
 
-    let topicCategory
+      let topicCategory
 
-    if (categoryId && !createNewCategory) {
-      topicCategory = await prisma.topicCategory.findUnique({
-        where: {
-          id: parseInt(categoryId)
+      if (categoryId && !createNewCategory) {
+        topicCategory = await prisma.topicCategory.findUnique({
+          where: {
+            id: parseInt(categoryId)
+          }
+        })
+      } else {
+        topicCategory = await prisma.topicCategory.create({
+          data: { name: newCategoryName, userId }
+        })
+      }
+
+      if (!topicCategory) {
+        throw new Error("Could not find or create category")
+      }
+
+      const topic = await prisma.topic.create({
+        data: {
+          name: topicName,
+          userId,
+          categoryId: topicCategory.id
         }
       })
-    } else {
-      topicCategory = await prisma.topicCategory.create({
-        data: { name: newCategoryName, userId }
-      })
-    }
 
-    if (!topicCategory) {
+      const page = await prisma.page.create({
+        data: {
+          topicId: topic.id,
+          slug: slugify(topicName),
+          userId
+        }
+      })
+
+      return Response.json({
+        topic: {
+          ...topic,
+          pages: [page]
+        }
+      })
+    } catch (error: any) {
       return Response.json(
-        { message: "Could not find or create category" },
+        { message: error?.message || "Could not create topic" },
         { status: 500 }
       )
     }
-
-    const topic = await prisma.topic.create({
-      data: {
-        name: topicName,
-        userId,
-        categoryId: topicCategory.id
-      }
-    })
-
-    const page = await prisma.page.create({
-      data: {
-        topicId: topic.id,
-        slug: slugify(topicName),
-        userId
-      }
-    })
-
-    return Response.json({
-      topic: {
-        ...topic,
-        pages: [page]
-      }
-    })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

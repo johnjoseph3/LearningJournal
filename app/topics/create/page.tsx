@@ -87,12 +87,13 @@ export default function Page() {
       body: JSON.stringify(values)
     })
 
+    const body = await res.json()
+
     if (!res.ok) {
-      toast("Could not create topic")
+      toast(body.message || "Could not create topic")
       return
     }
 
-    const body = await res.json()
     const page = body.topic.pages[0]
 
     router.push(`/pages/${page.slug}/edit`)
