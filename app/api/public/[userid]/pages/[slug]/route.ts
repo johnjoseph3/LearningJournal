@@ -8,9 +8,11 @@ export const GET = auth(async (req, context) => {
   if (req.auth && slug) {
     const page = await prisma.page.findUnique({
       where: {
-        slug,
-        public: true,
-        userId
+        slug_userId: {
+          slug,
+          userId
+        },
+        public: true
       },
       include: {
         entries: {
