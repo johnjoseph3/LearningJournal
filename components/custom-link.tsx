@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils.ts"
-import { ExternalLink } from "lucide-react"
+// import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 
 interface CustomLinkProps extends React.LinkHTMLAttributes<HTMLAnchorElement> {
@@ -35,7 +35,8 @@ const CustomLink = ({
       {...rest}
     >
       <span>{children}</span>
-      <ExternalLink className="ml-0.5 inline-block h-4 w-4" />
+      {/* Add external link back to show new tab icon */}
+      {/* <ExternalLink className="ml-0.5 inline-block h-4 w-4" /> */}
     </Link>
   )
 }
