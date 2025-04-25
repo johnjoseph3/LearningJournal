@@ -6,11 +6,16 @@ export const GET = auth(async (req, context) => {
 
   if (req.auth && slug) {
     const userId = req.auth.user?.id
+    if (!userId) {
+      return Response.json({ message: "Not authenticated" }, { status: 401 })
+    }
 
     const page = await prisma.page.findUnique({
       where: {
-        slug,
-        userId
+        slug_userId: {
+          slug,
+          userId
+        }
       },
       include: {
         entries: {
