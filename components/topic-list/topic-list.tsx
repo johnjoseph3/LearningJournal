@@ -15,6 +15,7 @@ export default function TopicList({ topics }: TopicListProps) {
     }
     return accum
   }, {})
+
   return (
     <>
       {Object.keys(groupedTopics).map((keyName, i) => {
@@ -28,7 +29,8 @@ export default function TopicList({ topics }: TopicListProps) {
               const page = topic.page[0]
               const url = page.public
                 ? `/public/${page.userId}/pages/${page.slug}`
-                : `/pages/${page.slug}/edit`
+                : `/pages/${page.userId}/${page.slug}/edit`
+
 
               return (
                 <CustomLink

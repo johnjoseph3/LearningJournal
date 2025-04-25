@@ -96,7 +96,7 @@ export default function Page() {
 
     const page = body.topic.pages[0]
 
-    router.push(`/pages/${page.slug}/edit`)
+    router.push(`/pages/${page.userId}/${page.slug}/edit`)
   }
 
   if (error)

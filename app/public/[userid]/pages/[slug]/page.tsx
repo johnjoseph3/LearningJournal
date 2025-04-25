@@ -37,9 +37,7 @@ export default function Page({
   const htmlContent = useMemo(() => {
     if (data?.page?.entries.length) {
       const html = data.page.entries.reduce((accum: string, curr: Entry) => {
-        const formattedDate = dayjs(curr.createdAt).format(
-          "MM/DD/YYYY"
-        )
+        const formattedDate = dayjs(curr.createdAt).format("MM/DD/YYYY")
         const content = `<div class="entry rounded-md p-2 flex flex-col">
           <div class="flex justify-end">
             <div class="text-sm text-gray-500">Created on ${formattedDate}</div>
@@ -68,7 +66,7 @@ export default function Page({
         </FontHeading>
         <div>
           <a
-            href={`/pages/${slug}/edit`}
+            href={`/pages/${userid}/${slug}/edit`}
             className="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline"
           >
             Edit page
