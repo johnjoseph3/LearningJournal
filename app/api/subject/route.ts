@@ -5,13 +5,13 @@ export const GET = auth(async (req) => {
   if (req.auth) {
     const userId = req.auth.user?.id
 
-    const topicCategories = await prisma.topicCategory.findMany({
+    const subjects = await prisma.subject.findMany({
       where: {
         userId: userId
-      },
+      }
     })
 
-    return Response.json({ topicCategories })
+    return Response.json({ subjects })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

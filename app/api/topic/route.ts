@@ -11,7 +11,7 @@ export const GET = auth(async (req, context) => {
       },
       include: {
         page: {},
-        category: {}
+        subject: {}
       },
       orderBy: {
         createdAt: "desc"

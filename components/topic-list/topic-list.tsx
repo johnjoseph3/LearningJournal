@@ -8,10 +8,10 @@ interface TopicListProps {
 
 export default function TopicList({ topics }: TopicListProps) {
   const groupedTopics = topics.reduce((accum: any, curr: any) => {
-    if (!accum[curr.category.name]) {
-      accum[curr.category.name] = [curr]
+    if (!accum[curr.subject.name]) {
+      accum[curr.subject.name] = [curr]
     } else {
-      accum[curr.category.name].push(curr)
+      accum[curr.subject.name].push(curr)
     }
     return accum
   }, {})

@@ -15,13 +15,13 @@ export const POST = auth(async (req) => {
       return Response.json({ message: "Topic not found" }, { status: 500 })
     }
 
-    const categoryTopics = await prisma.topic.findMany({
+    const subjectTopics = await prisma.topic.findMany({
       where: {
-        categoryId: topic.categoryId
+        subjectId: topic.subjectId
       }
     })
 
-    const lastEntry = categoryTopics.length === 1
+    const lastEntry = subjectTopics.length === 1
 
     await prisma.topic.delete({
       where: {
@@ -30,13 +30,13 @@ export const POST = auth(async (req) => {
     })
 
     if (lastEntry) {
-      await prisma.topicCategory.delete({
+      await prisma.subject.delete({
         where: {
-          id: topic.categoryId
+          id: topic.subjectId
         }
       })
     }
-    
+
     return Response.json("Successfully deleted")
   }
 

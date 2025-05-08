@@ -3,12 +3,12 @@
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
 import CustomLink from "@/components/custom-link"
-import { TopicCategory } from "@prisma/client"
+import { Subject } from "@prisma/client"
 import { getFetcher } from "@/app/api/fetchers/get"
 import PageHeader from "@/components/page-header/page-header"
 
 export default function Page() {
-  const { data, error, isLoading } = useSWR("/api/topic-category", getFetcher)
+  const { data, error, isLoading } = useSWR("/api/subject", getFetcher)
 
   if (error)
     return error?.info?.message || "An error occurred while fetching the data."
@@ -17,23 +17,23 @@ export default function Page() {
 
   return (
     <>
-      <PageHeader title="Categories" />
-      {data.topicCategories.map((category: TopicCategory) => {
+      <PageHeader title="Subjects" />
+      {data.subjects.map((subject: Subject) => {
         return (
           <CustomLink
-            key={category.id}
-            href={`/categories/${category.id}/edit`}
+            key={subject.id}
+            href={`/subjects/${subject.id}/edit`}
             className="underline block"
           >
-            {category.name}
+            {subject.name}
           </CustomLink>
         )
       })}
-      {!data.topicCategories.length ? (
+      {!data.subjects.length ? (
         <>
-          <span className="text-gray-500">No categories found </span>
+          <span className="text-gray-500">No subjects found </span>
           <CustomLink href="/topics/create" className="underline">
-            create a new topic and category
+            create a new topic and subject
           </CustomLink>
         </>
       ) : null}

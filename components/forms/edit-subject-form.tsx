@@ -3,7 +3,7 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { TopicCategory } from "@prisma/client"
+import { Subject } from "@prisma/client"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,19 +20,19 @@ const formSchema = z.object({
   name: z.string().min(2).max(50)
 })
 
-interface CategoryFormProps {
-  category: TopicCategory
+interface SubjectFormProps {
+  subject: Subject
   onSubmit: (values: { name: string }) => void
 }
 
-export default function EditCategoryForm({
-  category,
+export default function EditSubjectForm({
+  subject,
   onSubmit
-}: CategoryFormProps) {
+}: SubjectFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: category.name
+      name: subject.name
     }
   })
 

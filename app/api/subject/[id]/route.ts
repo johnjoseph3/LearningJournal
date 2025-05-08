@@ -5,17 +5,20 @@ export const GET = auth(async (req, context) => {
   const id = context.params?.id as string
 
   if (req.auth) {
-    const category = await prisma.topicCategory.findUnique({
+    const subject = await prisma.subject.findUnique({
       where: {
         id: parseInt(id)
       }
     })
 
-    if (!category) {
-      return Response.json({ message: "Could not find category" }, { status: 500 })
+    if (!subject) {
+      return Response.json(
+        { message: "Could not find subject" },
+        { status: 500 }
+      )
     }
 
-    return Response.json({ category })
+    return Response.json({ subject })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

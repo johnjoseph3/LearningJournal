@@ -35,10 +35,9 @@
 
 Learning Journal was born from a desire for a tool that can track topic based learning progress and provide encouragment for continued learning.
 
-
 Basics:
 
-- Categories and topics provide organization for topic based learning
+- Subjects and topics provide organization for topic based learning
 - Notion style editor and drag and drop blocks allow you to record you learnings for the day. Add another day's learnings the next time you revisit the topic
 - Make learnings public when you're ready to share!
 

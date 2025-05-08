@@ -43,9 +43,9 @@ export function MainNav() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/categories" legacyBehavior passHref>
+            <Link href="/subjects" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Categories
+                Subjects
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -19,11 +19,11 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  topics          Topic[]
-  topicCategories TopicCategory[]
-  pages           Page[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  topics    Topic[]
+  subjects  Subject[]
+  pages     Page[]
 }
 
 model Account {
@@ -81,7 +81,7 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-model TopicCategory {
+model Subject {
   id     Int     @id @default(autoincrement())
   name   String  @db.VarChar(255)
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,15 +90,15 @@ model TopicCategory {
 }
 
 model Topic {
-  id         Int           @id @default(autoincrement())
-  name       String        @db.VarChar(255)
-  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  category   TopicCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId Int
-  page       Page[]
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId Int
+  page      Page[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([name, userId])
 }

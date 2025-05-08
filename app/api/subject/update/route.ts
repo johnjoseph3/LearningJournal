@@ -5,7 +5,7 @@ export const POST = auth(async (req) => {
   if (req.auth) {
     const body = await req.json()
 
-    const category = await prisma.topicCategory.update({
+    const subject = await prisma.subject.update({
       where: {
         id: parseInt(body.id)
       },
@@ -14,7 +14,7 @@ export const POST = auth(async (req) => {
       }
     })
 
-    return Response.json({ category })
+    return Response.json({ subject })
   }
 
   return Response.json({ message: "Not authenticated" }, { status: 401 })

@@ -2,7 +2,7 @@
 
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
-import { TopicCategory } from "@prisma/client"
+import { Subject } from "@prisma/client"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -46,38 +46,38 @@ const fetcher = async (url: string) => {
 
 const formSchema = z
   .object({
-    categoryId: z.string().optional(),
-    newCategoryName: z.string().optional(),
+    subjectId: z.string().optional(),
+    newSubjectName: z.string().optional(),
     topicName: z.string().min(2).max(50),
-    createNewCategory: z.boolean()
+    createNewSubject: z.boolean()
   })
   .superRefine((data, ctx) => {
-    if (data.createNewCategory && !data.newCategoryName) {
+    if (data.createNewSubject && !data.newSubjectName) {
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Name is required to create a new category",
-        path: ["newCategoryName"]
+        message: "Name is required to create a new subject",
+        path: ["newSubjectName"]
       })
-    } else if (!data.createNewCategory && !data.categoryId) {
+    } else if (!data.createNewSubject && !data.subjectId) {
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Select a category",
-        path: ["categoryId"]
+        message: "Select a subject",
+        path: ["subjectId"]
       })
     }
   })
 
 export default function Page() {
-  const { data, error, isLoading } = useSWR("/api/topic-category", fetcher)
+  const { data, error, isLoading } = useSWR("/api/subject", fetcher)
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: "",
-      newCategoryName: "",
+      subjectId: "",
+      newSubjectName: "",
       topicName: "",
-      createNewCategory: true
+      createNewSubject: true
     }
   })
 
@@ -104,8 +104,8 @@ export default function Page() {
 
   if (isLoading) return <Skeleton />
 
-  const createNewCategoryVal = form.getValues("createNewCategory")
-  const hasTopicCategories = data.topicCategories.length
+  const createNewSubjectVal = form.getValues("createNewSubject")
+  const hasSubjects = data.subjects.length
 
   return (
     <>
@@ -131,16 +131,16 @@ export default function Page() {
           <div className="rounded-lg border p-3 shadow-sm">
             <FormField
               control={form.control}
-              name="createNewCategory"
+              name="createNewSubject"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between">
                   <div className="space-y-0.5 mb-4">
-                    <FormLabel>Category</FormLabel>
-                    <FormDescription>Create new category</FormDescription>
+                    <FormLabel>Subject</FormLabel>
+                    <FormDescription>Create new subject</FormDescription>
                   </div>
                   <FormControl>
                     <Switch
-                      disabled={!hasTopicCategories}
+                      disabled={!hasSubjects}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
@@ -150,13 +150,13 @@ export default function Page() {
             />
             <FormField
               control={form.control}
-              name="newCategoryName"
+              name="newSubjectName"
               render={({ field }) => (
                 <FormItem className="mb-4">
                   <FormControl>
                     <Input
-                      placeholder="New category name"
-                      disabled={!createNewCategoryVal}
+                      placeholder="New subject name"
+                      disabled={!createNewSubjectVal}
                       {...field}
                     />
                   </FormControl>
@@ -166,27 +166,27 @@ export default function Page() {
             />
             <FormField
               control={form.control}
-              name="categoryId"
+              name="subjectId"
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    disabled={createNewCategoryVal || !hasTopicCategories}
+                    disabled={createNewSubjectVal || !hasSubjects}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select existing category" />
+                        <SelectValue placeholder="Select existing subject" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {data.topicCategories.map((category: TopicCategory) => {
+                      {data.subjects.map((subject: Subject) => {
                         return (
                           <SelectItem
-                            key={category.id}
-                            value={category.id.toString()}
+                            key={subject.id}
+                            value={subject.id.toString()}
                           >
-                            {category.name}
+                            {subject.name}
                           </SelectItem>
                         )
                       })}
@@ -196,9 +196,9 @@ export default function Page() {
                 </FormItem>
               )}
             />
-            {!hasTopicCategories ? (
+            {!hasSubjects ? (
               <FormDescription>
-                No existing categories. You must create a new one.
+                No existing Subjects. You must create a new one.
               </FormDescription>
             ) : null}
           </div>

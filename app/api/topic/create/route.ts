@@ -11,68 +11,58 @@ function slugify(str: string) {
   return str
 }
 
-// TODO figure out prisma transaction syntax and apply it here
-
 export const POST = auth(async (req) => {
   if (req.auth) {
-    let newTopicCategoryCreated = false
-    let topicCategoryId = null
     try {
       const body = await req.json()
       const userId = req.auth.user?.id as string
 
-      const { categoryId, newCategoryName, topicName, createNewCategory } = body
+      const { subjectId, newSubjectName, topicName, createNewSubject } = body
 
-      let topicCategory
+      const result = await prisma.$transaction(async (tx) => {
+        let subject
 
-      if (categoryId && !createNewCategory) {
-        topicCategory = await prisma.topicCategory.findUnique({
-          where: {
-            id: parseInt(categoryId)
+        if (subjectId && !createNewSubject) {
+          subject = await tx.subject.findUnique({
+            where: {
+              id: parseInt(subjectId)
+            }
+          })
+          if (!subject) {
+            throw new Error("Could not find subject")
+          }
+        } else {
+          subject = await tx.subject.create({
+            data: { name: newSubjectName, userId }
+          })
+        }
+
+        const topic = await tx.topic.create({
+          data: {
+            name: topicName,
+            userId,
+            subjectId: subject.id
           }
         })
-      } else {
-        topicCategory = await prisma.topicCategory.create({
-          data: { name: newCategoryName, userId }
+
+        const page = await tx.page.create({
+          data: {
+            topicId: topic.id,
+            slug: slugify(topicName),
+            userId
+          }
         })
-        newTopicCategoryCreated = true
-        topicCategoryId = topicCategory.id
-      }
 
-      if (!topicCategory) {
-        throw new Error("Could not find or create category")
-      }
-
-      const topic = await prisma.topic.create({
-        data: {
-          name: topicName,
-          userId,
-          categoryId: topicCategory.id
+        return {
+          topic: {
+            ...topic,
+            pages: [page]
+          }
         }
       })
 
-      const page = await prisma.page.create({
-        data: {
-          topicId: topic.id,
-          slug: slugify(topicName),
-          userId
-        }
-      })
-
-      return Response.json({
-        topic: {
-          ...topic,
-          pages: [page]
-        }
-      })
+      return Response.json(result)
     } catch (error: any) {
-      if (newTopicCategoryCreated && topicCategoryId) {
-        await prisma.topicCategory.delete({
-          where: {
-            id: topicCategoryId
-          }
-        })
-      }
       return Response.json(
         { message: error?.message || "Could not create topic" },
         { status: 500 }

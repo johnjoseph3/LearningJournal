@@ -2,7 +2,7 @@
 
 import Skeleton from "@/components/skeleton"
 import useSWR from "swr"
-import EditCategoryForm from "@/components/forms/edit-category-form"
+import EditSubjectForm from "@/components/forms/edit-subject-form"
 import { toast } from "sonner"
 import { Heading } from "@/components/ui/heading"
 
@@ -19,11 +19,11 @@ const fetcher = async (url: string) => {
   return res.json()
 }
 
-export default function EditCategory({ params }: { params: { id: string } }) {
+export default function EditSubject({ params }: { params: { id: string } }) {
   const { id } = params
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/topic-category/${id}`,
+    `/api/subject/${id}`,
     fetcher
   )
 
@@ -35,29 +35,29 @@ export default function EditCategory({ params }: { params: { id: string } }) {
   async function handleSubmit(values: { name: string }) {
     const { name } = values
 
-    const res = await fetch("/api/topic-category/update", {
+    const res = await fetch("/api/subject/update", {
       method: "POST",
       body: JSON.stringify({ id, name: name.trim() })
     })
 
     if (!res.ok) {
-      toast("Could not update category")
+      toast("Could not update subject")
       return
     }
 
-    toast("Category updated")
+    toast("Subject updated")
 
     const body = await res.json()
 
     mutate({
-      category: body.category
+      subject: body.subject
     })
   }
 
   return (
     <>
-      <Heading size="h1">Edit category</Heading>
-      <EditCategoryForm category={data.category} onSubmit={handleSubmit} />
+      <Heading size="h1">Edit subject</Heading>
+      <EditSubjectForm subject={data.subject} onSubmit={handleSubmit} />
     </>
   )
 }
