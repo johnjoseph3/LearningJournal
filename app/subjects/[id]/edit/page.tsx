@@ -1,63 +1,48 @@
 "use client"
 
-import Skeleton from "@/components/skeleton"
-import useSWR from "swr"
+import DataFetcher from "@/components/data-fetcher/data-fetcher"
 import EditSubjectForm from "@/components/forms/edit-subject-form"
 import { toast } from "sonner"
-import { Heading } from "@/components/ui/heading"
+import PageHeader from "@/components/page-header/page-header"
+import { Subject } from "@prisma/client"
 
-const fetcher = async (url: string) => {
-  const res = await fetch(url)
+async function handleSubmit(id: string, values: { name: string }, mutate: any) {
+  const { name } = values
+
+  const res = await fetch("/api/subject/update", {
+    method: "POST",
+    body: JSON.stringify({ id, name: name.trim() })
+  })
 
   if (!res.ok) {
-    const error: any = new Error("An error occurred while fetching the data.")
-    error.info = await res.json()
-    error.status = res.status
-    throw error
+    toast("Could not update subject")
+    return
   }
 
-  return res.json()
+  toast("Subject updated")
+
+  const body = await res.json()
+
+  mutate({
+    subject: body.subject
+  })
 }
 
 export default function EditSubject({ params }: { params: { id: string } }) {
   const { id } = params
 
-  const { data, error, isLoading, mutate } = useSWR(
-    `/api/subject/${id}`,
-    fetcher
-  )
-
-  if (error)
-    return error?.info?.message || "An error occurred while fetching the data."
-
-  if (isLoading) return <Skeleton />
-
-  async function handleSubmit(values: { name: string }) {
-    const { name } = values
-
-    const res = await fetch("/api/subject/update", {
-      method: "POST",
-      body: JSON.stringify({ id, name: name.trim() })
-    })
-
-    if (!res.ok) {
-      toast("Could not update subject")
-      return
-    }
-
-    toast("Subject updated")
-
-    const body = await res.json()
-
-    mutate({
-      subject: body.subject
-    })
-  }
-
   return (
-    <>
-      <Heading size="h1">Edit subject</Heading>
-      <EditSubjectForm subject={data.subject} onSubmit={handleSubmit} />
-    </>
+    <div>
+      <PageHeader title="Subjects" />
+      <DataFetcher<{ subject: Subject }>
+        endpoint={`/api/subject/${id}`}
+        render={(data, mutate) => (
+          <EditSubjectForm
+            subject={data.subject}
+            onSubmit={(values) => handleSubmit(id, values, mutate)}
+          />
+        )}
+      />
+    </div>
   )
 }

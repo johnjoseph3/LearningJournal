@@ -1,23 +1,14 @@
 "use client"
 
-import Skeleton from "@/components/skeleton"
-import useSWR from "swr"
 import CustomLink from "@/components/custom-link"
-import { Heading } from "@/components/ui/heading"
 import TopicList from "@/components/topic-list/topic-list"
-import { getFetcher } from "@/app/api/fetchers/get"
 import PageHeader from "@/components/page-header/page-header"
+import DataFetcher from "@/components/data-fetcher/data-fetcher"
+import { Topic } from "@prisma/client"
 
 export default function Page() {
-  const { data, error, isLoading } = useSWR("/api/topic", getFetcher)
-
-  if (error)
-    return error?.info?.message || "An error occurred while fetching the data."
-
-  if (isLoading) return <Skeleton />
-
   return (
-    <>
+    <div>
       <PageHeader
         title="Topics"
         rightChild={
@@ -26,7 +17,12 @@ export default function Page() {
           </CustomLink>
         }
       />
-      <TopicList topics={data?.topics || []} />
-    </>
+      <DataFetcher<{ topics: Topic[] }>
+        endpoint="/api/topic"
+        render={(data) => {
+          return <TopicList topics={data?.topics || []} />
+        }}
+      />
+    </div>
   )
 }

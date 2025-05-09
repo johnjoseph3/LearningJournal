@@ -31,7 +31,6 @@ export default function TopicList({ topics }: TopicListProps) {
                 ? `/public/${page.userId}/pages/${page.slug}`
                 : `/pages/${page.userId}/${page.slug}/edit`
 
-
               return (
                 <CustomLink
                   key={topic.id}
@@ -45,14 +44,6 @@ export default function TopicList({ topics }: TopicListProps) {
           </div>
         )
       })}
-      {!topics.length ? (
-        <>
-          <span className="text-gray-500">No topics found </span>
-          <CustomLink href="/topics/create" className="underline">
-            create a new one
-          </CustomLink>
-        </>
-      ) : null}
     </>
   )
 }

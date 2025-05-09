@@ -1,7 +1,6 @@
 "use client"
 
-import Skeleton from "@/components/skeleton"
-import useSWR from "swr"
+import DataFetcher from "@/components/data-fetcher/data-fetcher"
 import { Subject } from "@prisma/client"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,7 +10,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Heading } from "@/components/ui/heading"
+import PageHeader from "@/components/page-header/page-header"
 import {
   Form,
   FormControl,
@@ -30,19 +29,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-
-const fetcher = async (url: string) => {
-  const res = await fetch(url)
-
-  if (!res.ok) {
-    const error: any = new Error("An error occurred while fetching the data.")
-    error.info = await res.json()
-    error.status = res.status
-    throw error
-  }
-
-  return res.json()
-}
 
 const formSchema = z
   .object({
@@ -67,8 +53,7 @@ const formSchema = z
     }
   })
 
-export default function Page() {
-  const { data, error, isLoading } = useSWR("/api/subject", fetcher)
+function RenderForm({ subjects }: { subjects: Subject[] }) {
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,113 +84,114 @@ export default function Page() {
     router.push(`/pages/${page.userId}/${page.slug}/edit`)
   }
 
-  if (error)
-    return error?.info?.message || "An error occurred while fetching the data."
-
-  if (isLoading) return <Skeleton />
-
   const createNewSubjectVal = form.getValues("createNewSubject")
-  const hasSubjects = data.subjects.length
+  const hasSubjects = subjects.length
 
   return (
-    <>
-      <Heading size="h1">New topic</Heading>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
-        >
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+        <FormField
+          control={form.control}
+          name="topicName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Topic name</FormLabel>
+              <FormControl>
+                <Input placeholder="Topic name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="rounded-lg border p-3 shadow-sm">
           <FormField
             control={form.control}
-            name="topicName"
+            name="createNewSubject"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Topic name</FormLabel>
+              <FormItem className="flex flex-row items-center justify-between">
+                <div className="space-y-0.5 mb-4">
+                  <FormLabel>Subject</FormLabel>
+                  <FormDescription>Create new subject</FormDescription>
+                </div>
                 <FormControl>
-                  <Input placeholder="Topic name" {...field} />
+                  <Switch
+                    disabled={!hasSubjects}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="newSubjectName"
+            render={({ field }) => (
+              <FormItem className="mb-4">
+                <FormControl>
+                  <Input
+                    placeholder="New subject name"
+                    disabled={!createNewSubjectVal}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="rounded-lg border p-3 shadow-sm">
-            <FormField
-              control={form.control}
-              name="createNewSubject"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between">
-                  <div className="space-y-0.5 mb-4">
-                    <FormLabel>Subject</FormLabel>
-                    <FormDescription>Create new subject</FormDescription>
-                  </div>
+          <FormField
+            control={form.control}
+            name="subjectId"
+            render={({ field }) => (
+              <FormItem className="mb-2">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={createNewSubjectVal || !hasSubjects}
+                >
                   <FormControl>
-                    <Switch
-                      disabled={!hasSubjects}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select existing subject" />
+                    </SelectTrigger>
                   </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="newSubjectName"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormControl>
-                    <Input
-                      placeholder="New subject name"
-                      disabled={!createNewSubjectVal}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="subjectId"
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={createNewSubjectVal || !hasSubjects}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select existing subject" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {data.subjects.map((subject: Subject) => {
-                        return (
-                          <SelectItem
-                            key={subject.id}
-                            value={subject.id.toString()}
-                          >
-                            {subject.name}
-                          </SelectItem>
-                        )
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {!hasSubjects ? (
-              <FormDescription>
-                No existing Subjects. You must create a new one.
-              </FormDescription>
-            ) : null}
-          </div>
+                  <SelectContent>
+                    {subjects.map((subject: Subject) => {
+                      return (
+                        <SelectItem
+                          key={subject.id}
+                          value={subject.id.toString()}
+                        >
+                          {subject.name}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {!hasSubjects ? (
+            <FormDescription>
+              No existing Subjects. You must create a new one.
+            </FormDescription>
+          ) : null}
+        </div>
 
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
-    </>
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  )
+}
+
+export default function Page() {
+  return (
+    <div>
+      <PageHeader title="Create Topic" />
+      <DataFetcher<{ subjects: Subject[] }>
+        endpoint="/api/subject"
+        render={(data) => <RenderForm subjects={data.subjects} />}
+      />
+    </div>
   )
 }
