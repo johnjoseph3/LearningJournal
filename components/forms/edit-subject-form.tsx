@@ -4,6 +4,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Subject } from "@prisma/client"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,13 +23,9 @@ const formSchema = z.object({
 
 interface SubjectFormProps {
   subject: Subject
-  onSubmit: (values: { name: string }) => void
 }
 
-export default function EditSubjectForm({
-  subject,
-  onSubmit
-}: SubjectFormProps) {
+export default function EditSubjectForm({ subject }: SubjectFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,8 +33,20 @@ export default function EditSubjectForm({
     }
   })
 
-  function handleSubmit(values: z.infer<typeof formSchema>) {
-    onSubmit(values)
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    const { name } = values
+
+    const res = await fetch("/api/subject/update", {
+      method: "POST",
+      body: JSON.stringify({ id: subject.id, name: name.trim() })
+    })
+
+    if (!res.ok) {
+      toast("Could not update subject")
+      return
+    }
+
+    toast("Subject updated")
   }
 
   return (
