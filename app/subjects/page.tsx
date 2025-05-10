@@ -1,9 +1,21 @@
-"use client"
-
-import CustomLink from "@/components/custom-link"
+import { prisma } from "@/prisma/prisma"
 import PageHeader from "@/components/page-header/page-header"
-import DataFetcher from "@/components/data-fetcher/data-fetcher"
+import CustomLink from "@/components/custom-link"
 import { Subject } from "@prisma/client"
+import { auth } from "auth"
+
+async function fetchSubjects(): Promise<Subject[]> {
+  const session = await auth()
+  if (!session?.user) {
+    return []
+  }
+
+  return await prisma.subject.findMany({
+    where: {
+      userId: session.user.id
+    }
+  })
+}
 
 function RenderSubjects({ subjects }: { subjects: Subject[] }) {
   return (
@@ -29,14 +41,13 @@ function RenderSubjects({ subjects }: { subjects: Subject[] }) {
   )
 }
 
-export default function Page() {
+export default async function Page() {
+  const subjects = await fetchSubjects()
+
   return (
     <div>
       <PageHeader title="Subjects" />
-      <DataFetcher<{ subjects: Subject[] }>
-        endpoint="/api/subject"
-        render={(data) => <RenderSubjects subjects={data.subjects} />}
-      />
+      <RenderSubjects subjects={subjects} />
     </div>
   )
 }
