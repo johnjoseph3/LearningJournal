@@ -4,6 +4,7 @@ import { Topic } from "@prisma/client"
 import CustomLink from "@/components/custom-link"
 import { Heading } from "@/components/ui/heading"
 import CursorPaginator from "@/components/cursor-paginator/cursor-paginator"
+import { Button } from "@/components/ui/button"
 
 interface TopicListResponse {
   topics: Topic[]
@@ -60,13 +61,9 @@ export default function TopicList() {
             })}
 
             {hasMore && (
-              <button
-                onClick={loadMore}
-                disabled={loading}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-              >
+              <Button onClick={loadMore} disabled={loading} className="mt-4">
                 {loading ? "Loading..." : "Load More"}
-              </button>
+              </Button>
             )}
           </div>
         )
