@@ -3,7 +3,7 @@
 import { Topic } from "@prisma/client"
 import CustomLink from "@/components/custom-link"
 import { Heading } from "@/components/ui/heading"
-import DataFetcher from "@/components/data-fetcher/data-fetcher"
+import CursorPaginator from "@/components/cursor-paginator/cursor-paginator"
 
 interface TopicListResponse {
   topics: Topic[]
@@ -12,7 +12,7 @@ interface TopicListResponse {
 
 export default function TopicList() {
   return (
-    <DataFetcher<TopicListResponse>
+    <CursorPaginator<TopicListResponse>
       endpoint="/api/topic?limit=10"
       mergeData={(currentData, newData) => ({
         topics: [...currentData.topics, ...newData.topics],

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Skeleton from "@/components/skeleton"
-interface DataFetcherProps<T> {
+interface CursorPaginatorProps<T> {
   endpoint: string
   render: (
     data: T,
@@ -14,12 +14,12 @@ interface DataFetcherProps<T> {
   getNextCursor: (data: T) => string | null
 }
 
-export default function DataFetcher<T>({
+export default function CursorPaginator<T>({
   endpoint,
   render,
   mergeData,
   getNextCursor
-}: DataFetcherProps<T>) {
+}: CursorPaginatorProps<T>) {
   const [cursor, setCursor] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(true)

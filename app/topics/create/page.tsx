@@ -1,6 +1,6 @@
 "use client"
 
-import DataFetcher from "@/components/data-fetcher/data-fetcher"
+import { useEffect, useState } from "react"
 import { Subject } from "@prisma/client"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,6 +11,7 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import PageHeader from "@/components/page-header/page-header"
+import Skeleton from "@/components/skeleton"
 import {
   Form,
   FormControl,
@@ -185,13 +186,29 @@ function RenderForm({ subjects }: { subjects: Subject[] }) {
 }
 
 export default function Page() {
+  const [subjects, setSubjects] = useState<Subject[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchSubjects() {
+      try {
+        const response = await fetch("/api/subject")
+        const data = await response.json()
+        setSubjects(data.subjects)
+      } catch (err) {
+        console.error("Failed to fetch subjects:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSubjects()
+  }, [])
+
   return (
     <div>
       <PageHeader title="Create Topic" />
-      <DataFetcher<{ subjects: Subject[] }>
-        endpoint="/api/subject"
-        render={(data) => <RenderForm subjects={data.subjects} />}
-      />
+      {loading ? <Skeleton /> : <RenderForm subjects={subjects} />}
     </div>
   )
 }

@@ -5,22 +5,27 @@ export const GET = auth(async (req) => {
   if (req.auth) {
     const userId = req.auth.user?.id
     const cursor = req.nextUrl.searchParams.get("cursor")
-    const limit = req.nextUrl.searchParams.get("limit") || "10"
+    const limit = req.nextUrl.searchParams.get("limit")
 
-    const subjects = await prisma.subject.findMany({
+    const queryOptions: any = {
       where: {
         userId: userId
       },
-      take: parseInt(limit as string),
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { id: parseInt(cursor) } : undefined,
       orderBy: {
         id: "desc"
       }
-    })
+    }
+
+    if (limit) {
+      queryOptions.take = parseInt(limit)
+      queryOptions.skip = cursor ? 1 : 0
+      queryOptions.cursor = cursor ? { id: parseInt(cursor) } : undefined
+    }
+
+    const subjects = await prisma.subject.findMany(queryOptions)
 
     const nextCursor =
-      subjects.length === parseInt(limit)
+      limit && subjects.length === parseInt(limit)
         ? subjects[subjects.length - 1].id
         : null
 

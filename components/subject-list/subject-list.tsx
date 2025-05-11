@@ -1,7 +1,7 @@
 "use client"
 
 import CustomLink from "@/components/custom-link"
-import DataFetcher from "@/components/data-fetcher/data-fetcher"
+import CursorPaginator from "@/components/cursor-paginator/cursor-paginator"
 import { Subject } from "@prisma/client"
 
 interface SubjectListResponse {
@@ -11,7 +11,7 @@ interface SubjectListResponse {
 
 export default function SubjectList() {
   return (
-    <DataFetcher<SubjectListResponse>
+    <CursorPaginator<SubjectListResponse>
       endpoint="/api/subject?limit=10"
       mergeData={(currentData, newData) => ({
         subjects: [...currentData.subjects, ...newData.subjects],
