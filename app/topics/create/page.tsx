@@ -54,7 +54,13 @@ const formSchema = z
     }
   })
 
-function RenderForm({ subjects }: { subjects: Subject[] }) {
+function RenderForm({
+  subjects,
+  loading
+}: {
+  subjects: Subject[]
+  loading: boolean
+}) {
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -148,7 +154,7 @@ function RenderForm({ subjects }: { subjects: Subject[] }) {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={createNewSubjectVal || !hasSubjects}
+                  disabled={createNewSubjectVal || !hasSubjects || loading}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -172,7 +178,7 @@ function RenderForm({ subjects }: { subjects: Subject[] }) {
               </FormItem>
             )}
           />
-          {!hasSubjects ? (
+          {!hasSubjects && !loading ? (
             <FormDescription>
               No existing Subjects. You must create a new one.
             </FormDescription>
@@ -208,7 +214,7 @@ export default function Page() {
   return (
     <div>
       <PageHeader title="Create Topic" />
-      {loading ? <Skeleton /> : <RenderForm subjects={subjects} />}
+      <RenderForm subjects={subjects} loading={loading} />
     </div>
   )
 }
