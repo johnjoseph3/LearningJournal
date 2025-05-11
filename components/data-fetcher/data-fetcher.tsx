@@ -1,32 +1,80 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Skeleton from "@/components/skeleton"
-import useSWR from "swr"
-
 interface DataFetcherProps<T> {
   endpoint: string
   render: (
     data: T,
-    mutate: (data?: T | Promise<T>, shouldRevalidate?: boolean) => void
+    loadMore: () => Promise<void>,
+    loading: boolean,
+    hasMore: boolean
   ) => React.ReactNode
+  mergeData: (currentData: T, newData: T) => T
+  getNextCursor: (data: T) => string | null
 }
 
 export default function DataFetcher<T>({
   endpoint,
-  render
+  render,
+  mergeData,
+  getNextCursor
 }: DataFetcherProps<T>) {
-  const { data, error, isLoading, mutate } = useSWR(endpoint, (url) =>
-    fetch(url).then((res) => res.json())
-  )
+  const [cursor, setCursor] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [hasMore, setHasMore] = useState(true)
+  const [mergedData, setMergedData] = useState<T | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchInitialData() {
+      setLoading(true)
+      try {
+        const response = await fetch(endpoint)
+        const initialData = await response.json()
+        setMergedData(initialData)
+        setCursor(getNextCursor(initialData))
+        setHasMore(!!getNextCursor(initialData))
+      } catch (err) {
+        console.error("Error fetching initial data:", err)
+        setError("Failed to fetch data.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchInitialData()
+  }, [endpoint, getNextCursor])
+
+  async function loadMore() {
+    if (loading || !hasMore) return
+
+    setLoading(true)
+
+    try {
+      const response = await fetch(
+        endpoint + (cursor ? `&cursor=${cursor}` : "")
+      )
+      const newData = await response.json()
+
+      const updatedData = mergeData(mergedData as T, newData)
+      setMergedData(updatedData)
+
+      const nextCursor = getNextCursor(newData)
+      setCursor(nextCursor)
+      setHasMore(!!nextCursor)
+    } catch (err) {
+      console.error("Error loading more data:", err)
+      setError("Failed to load more data.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (error)
-    return (
-      <div>
-        {error?.info?.message || "An error occurred while fetching the data."}
-      </div>
-    )
+    return <div>{error || "An error occurred while fetching the data."}</div>
 
-  if (isLoading) return <Skeleton />
+  if (loading && !mergedData) return <Skeleton />
 
-  return <>{data && render(data, mutate)}</>
+  return <>{render(mergedData as T, loadMore, loading, hasMore)}</>
 }
