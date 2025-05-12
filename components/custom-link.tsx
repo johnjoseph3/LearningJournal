@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils.ts"
-// import { ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 
 interface CustomLinkProps extends React.LinkHTMLAttributes<HTMLAnchorElement> {
@@ -15,28 +15,23 @@ const CustomLink = ({
   const isInternalLink = href.startsWith("/")
   const isAnchorLink = href.startsWith("#")
 
-  if (isInternalLink || isAnchorLink) {
-    return (
-      <Link href={href} className={className} {...rest}>
-        {children}
-      </Link>
-    )
-  }
+  const classes = cn(
+    "inline-flex items-center gap-1 align-baseline hover:underline underline-offset-4",
+    className
+  )
 
   return (
     <Link
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        "inline-flex items-center gap-1 align-baseline underline underline-offset-4",
-        className
-      )}
+      className={classes}
+      target={isInternalLink || isAnchorLink ? undefined : "_blank"}
+      rel={isInternalLink || isAnchorLink ? undefined : "noopener noreferrer"}
       {...rest}
     >
-      <span>{children}</span>
-      {/* Add external link back to show new tab icon */}
-      {/* <ExternalLink className="ml-0.5 inline-block h-4 w-4" /> */}
+      {isInternalLink || isAnchorLink ? children : <span>{children}</span>}
+      {!isInternalLink && !isAnchorLink && (
+        <ExternalLink className="ml-0.5 inline-block h-4 w-4" />
+      )}
     </Link>
   )
 }

@@ -7,10 +7,13 @@ export const GET = auth(async (req, context) => {
 
     const cursor = req.nextUrl.searchParams.get("cursor")
     const limit = parseInt(req.nextUrl.searchParams.get("limit") || "10", 10)
+    const allPublic = req.nextUrl.searchParams.get("allPublic") === "true"
 
     const topics = await prisma.topic.findMany({
       where: {
-        userId: userId
+        ...(allPublic
+          ? { page: { some: { public: true } } }
+          : { userId: userId })
       },
       include: {
         page: true,

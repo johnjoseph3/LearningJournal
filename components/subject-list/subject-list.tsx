@@ -22,15 +22,15 @@ export default function SubjectList() {
       render={(data, loadMore, loading, hasMore) => {
         return (
           <div>
-            {data.subjects.map((subject) => (
-              <CustomLink
-                key={subject.id}
-                href={`/subjects/${subject.id}/edit`}
-                className="underline block"
-              >
-                {subject.name}
-              </CustomLink>
-            ))}
+            <ul>
+              {data.subjects.map((subject) => (
+                <li key={subject.id} className="mt-2">
+                  <CustomLink href={`/subjects/${subject.id}/edit`}>
+                    {subject.name}
+                  </CustomLink>
+                </li>
+              ))}
+            </ul>
 
             {!data.subjects.length && !loading && (
               <>

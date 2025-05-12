@@ -31,7 +31,7 @@ export default async function RootLayout({
         >
           <div className="flex h-full min-h-screen w-full flex-col justify-between">
             <Header />
-            <main className="mx-auto w-full max-w-3xl flex-auto px-4 py-4 sm:px-6 md:py-6">
+            <main className="mx-auto w-full max-w-7xl flex-auto px-4 py-4 sm:px-6 md:py-6">
               {!session?.user ? (
                 <>
                   <Heading size="h1">Welcome</Heading>

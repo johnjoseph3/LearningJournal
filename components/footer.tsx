@@ -3,7 +3,7 @@ import {  GithubIcon } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="mx-0 my-4 flex w-full flex-col gap-4 px-4 text-sm sm:mx-auto sm:my-12 sm:h-5 sm:max-w-3xl sm:flex-row sm:items-center sm:justify-between sm:px-6">
+    <footer className="mx-0 my-4 flex w-full flex-col gap-4 px-4 text-sm sm:mx-auto sm:my-12 sm:h-5 sm:max-w-7xl sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div className="flex flex-col gap-4 sm:flex-row">
         <CustomLink href="https://github.com/johnjoseph3/LearningJournal">
           <GithubIcon className="ml-1 inline-block h-4 w-4" />
