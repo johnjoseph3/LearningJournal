@@ -47,13 +47,21 @@ export default function TopicList(props: {
 
                 return (
                   <li key={topic.id} className="mt-2">
-                    <CustomLink href={url}>
-                      {topic.name}
-                    </CustomLink>
+                    <CustomLink href={url}>{topic.name}</CustomLink>
                   </li>
                 )
               })}
             </ul>
+
+            {!data.topics.length && !loading && (
+              <>
+                <span className="text-gray-500">No topics found </span>
+                <CustomLink href="/topics/create" className="underline">
+                  create a new topic
+                </CustomLink>
+              </>
+            )}
+
             {hasMore && (
               <Button onClick={loadMore} disabled={loading} className="mt-4">
                 {loading ? "Loading..." : "Load More"}
