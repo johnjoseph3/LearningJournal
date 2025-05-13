@@ -1,18 +1,15 @@
 import TopicList from "@/components/topic-list/topic-list"
 import PageHeader from "@/components/page-header/page-header"
-import { Heading } from "@/components/ui/heading"
-import { Separator } from "@/components/ui/separator"
 
 export default async function Index() {
   return (
     <div>
       <PageHeader title="Dashboard" />
-      <div className="md:flex">
-        <section className="md:w-1/3 w-full mb-4 md:mb-0 md:border-r min-h-[250px]">
+      <div className="flex flex-col md:flex-row">
+        <section className="w-full md:w-1/3 md:border-r order-2 md:order-1">
           <TopicList heading="My Topics" />
         </section>
-        <Separator className="md:hidden w-[1px] bg-gray-200" />
-        <section className="md:w-2/3 md:pl-6 w-full min-h-[250px]">
+        <section className="w-full md:w-2/3 md:pl-6 order-1 md:order-2 pb-4 md:pb-0 border-b md:border-b-0">
           <TopicList heading="Feed" allPublic={true} />
         </section>
       </div>
