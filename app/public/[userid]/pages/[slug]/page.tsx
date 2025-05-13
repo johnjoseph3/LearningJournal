@@ -77,7 +77,7 @@ export default function Page({
       </div>
       {htmlContent ? (
         <div
-          className="prose dark:prose-invert entries-container"
+          className="prose dark:prose-invert prose md:prose-lg lg:prose-xl entries-container"
           dangerouslySetInnerHTML={{
             __html: htmlContent || ""
           }}
